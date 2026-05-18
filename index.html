@@ -72,9 +72,9 @@
   .amt{font-weight:500;font-family:monospace;font-size:.9rem;color:var(--saffron-dark)}
   tr.paid-row .amt{color:#2E7D32}
   .cb-wrap{display:flex;align-items:center;justify-content:center}
-  .custom-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);background:white;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;position:relative;-webkit-tap-highlight-color:transparent}
-  .custom-check:checked{background:var(--success);border-color:var(--success)}
-  .custom-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:14px;font-weight:700;line-height:1}
+  .custom-check{display:none}
+  .check-label{width:26px;height:26px;border-radius:6px;border:2px solid var(--border);background:white;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s;font-size:0;line-height:1}
+  .check-label.is-checked{background:var(--success);border-color:var(--success);font-size:16px;color:white;font-weight:700}
   .btn-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:1.1rem;padding:.35rem .55rem;border-radius:4px;-webkit-tap-highlight-color:transparent}
   .btn-del:active{color:#e53935;background:#FFEBEE}
   .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:.9rem}
@@ -199,7 +199,7 @@
 <script>
 // ── FIREBASE CONFIG (hardcoded) ───────────
 var FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBQeS1y9v033LXFkw2vfZZVTM416bLrgKY",
+  apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxx",
   authDomain: "dansala-95329.firebaseapp.com",
   databaseURL: "https://dansala-95329-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "dansala-95329",
@@ -284,8 +284,21 @@ function askPwd(id){
 function submitPwd(){
   if(document.getElementById('pwd-input').value === PWD){
     document.getElementById('pwd-modal').style.display = 'none';
-    doToggle(pendingToggle);
+    var id = pendingToggle;
     pendingToggle = null;
+    // Optimistic local update — update span directly + entries array
+    var e = getEntry(id);
+    if(e){
+      e.paid = !e.paid;
+      // Update the span directly for instant visual feedback
+      var span = document.querySelector('.cb-btn[data-id="'+id+'"]');
+      if(span){
+        if(e.paid){ span.classList.add('is-checked'); span.textContent='✓'; }
+        else { span.classList.remove('is-checked'); span.textContent=''; }
+      }
+      render();
+    }
+    doToggle(id, e ? e.paid : null);
   } else {
     document.getElementById('pwd-err').style.display = 'block';
     document.getElementById('pwd-input').value = '';
@@ -300,12 +313,10 @@ function cancelPwd(){
 }
 
 // ── TOGGLE ────────────────────────────────
-function doToggle(id){
+function doToggle(id, newPaidValue){
   if(!ready) return;
-  var e = getEntry(id);
-  if(!e) return;
   setStatus('syncing','සමමුහුර්ත කරමින්...');
-  fbRef.child(String(id)).update({paid:!e.paid});
+  fbRef.child(String(id)).update({paid: newPaidValue});
 }
 
 // ── DELETE ────────────────────────────────
@@ -348,17 +359,15 @@ function render(){
     h+='<tr class="'+(e.paid?'paid-row':'')+'">';
     h+='<td class="name-cell">'+esc(e.name)+'</td>';
     h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
-    h+='<td class="c"><div class="cb-wrap"><input type="checkbox" class="custom-check"'+(e.paid?' checked':'')+'data-id="'+e.id+'"></div></td>';
+    h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></div></td>';
     h+='<td class="c"><button class="btn-del" data-del="'+e.id+'" type="button">✕</button></td>';
     h+='</tr>';
   }
   tbody.innerHTML = h;
 
-  var cbs = tbody.querySelectorAll('.custom-check');
+  var cbs = tbody.querySelectorAll('.cb-btn');
   for(var k=0;k<cbs.length;k++){ (function(el){
-    el.addEventListener('change',function(ev){
-      ev.preventDefault();
-      el.checked = !el.checked;
+    el.addEventListener('click',function(){
       askPwd(parseInt(el.getAttribute('data-id'),10));
     });
   })(cbs[k]); }
