@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>පොසොන් මහා දන්සල</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --gold:#C8860A;--gold-light:#F5D98B;--gold-bg:#FDF6E3;
+    --saffron:#E8851A;--saffron-dark:#B35C00;--maroon:#7B1C2E;
+    --cream:#FFF9EE;--text:#2C1A0E;--text-muted:#7A5C3A;
+    --border:#E5C97A;--success:#2E7D32;--success-bg:#E8F5E9;
+    --radius:12px;--shadow:0 2px 12px rgba(200,134,10,0.12);
+  }
+  body{font-family:'Noto Sans Sinhala',sans-serif;background:var(--gold-bg);color:var(--text);min-height:100vh;padding-bottom:3rem}
+
+  .header{background:linear-gradient(135deg,var(--maroon) 0%,#4A0E1A 50%,var(--maroon) 100%);padding:1.5rem 1rem 2rem;text-align:center;position:relative;overflow:hidden}
+  .header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C8860A' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");opacity:.5}
+  .header-deco{color:var(--gold-light);font-size:1.6rem;letter-spacing:.5rem;display:block;margin-bottom:.5rem;position:relative}
+  .header h1{font-family:'Noto Serif Sinhala',serif;font-size:clamp(1.5rem,7vw,2rem);font-weight:700;color:var(--gold-light);position:relative;text-shadow:0 2px 8px rgba(0,0,0,.4);line-height:1.3}
+  .header-sub{color:rgba(245,217,139,.7);font-size:.8rem;margin-top:.4rem;position:relative;letter-spacing:.1rem}
+  .lotus-divider{display:flex;align-items:center;justify-content:center;gap:.5rem;margin:1rem 0 0;position:relative}
+  .lotus-divider::before,.lotus-divider::after{content:'';flex:1;height:1px;background:var(--gold-light);opacity:.4}
+  .lotus-divider span{color:var(--gold-light);font-size:1rem}
+
+  #status-bar{display:flex;align-items:center;justify-content:center;gap:6px;padding:.4rem 1rem;font-size:.72rem;background:#555;color:#ddd;transition:background .4s,color .4s}
+  #status-bar.online{background:#1B5E20;color:#C8E6C9}
+  #status-bar.error{background:#7f1d1d;color:#fecaca}
+  #status-bar.syncing{background:#78350f;color:#fde68a}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;display:inline-block}
+  .syncing .sync-dot{animation:blink .8s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+  .main{padding:1.25rem 1rem;max-width:600px;margin:0 auto}
+
+  .totals{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
+  .total-card{background:white;border-radius:var(--radius);padding:1rem;border:1.5px solid var(--border);box-shadow:var(--shadow);text-align:center}
+  .total-card.paid{border-color:#A5D6A7}
+  .total-label{font-size:.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.08rem;margin-bottom:.3rem}
+  .total-card.paid .total-label{color:var(--success)}
+  .total-amount{font-size:1.3rem;font-weight:700;color:var(--saffron-dark)}
+  .total-card.paid .total-amount{color:var(--success)}
+  .total-currency{font-size:.75rem;font-weight:500}
+
+  .add-section{background:white;border-radius:var(--radius);padding:1.25rem;border:1.5px solid var(--border);box-shadow:var(--shadow);margin-bottom:1.25rem}
+  .section-title{font-family:'Noto Serif Sinhala',serif;font-size:.9rem;font-weight:600;color:var(--maroon);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  .section-title::before{content:'✦';color:var(--gold);font-size:.75rem}
+  .form-row{display:flex;flex-direction:column;gap:.75rem}
+  .form-group{display:flex;flex-direction:column;gap:.35rem}
+  label{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06rem}
+  input[type="text"],input[type="password"]{width:100%;padding:.75rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;color:var(--text);background:var(--cream);outline:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
+  input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+  .btn-add{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--saffron) 0%,var(--gold) 100%);color:white;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:.1rem}
+  .btn-add:active{opacity:.85}
+
+  .table-section{background:white;border-radius:var(--radius);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+  .table-header-row{background:linear-gradient(135deg,var(--maroon),#5A1020);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between}
+  .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.85rem;font-weight:600}
+  .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(245,217,139,.3)}
+  .table-wrapper{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:300px}
+  thead tr{background:var(--gold-bg);border-bottom:2px solid var(--border)}
+  th{padding:.7rem .75rem;text-align:left;font-size:.72rem;font-weight:700;color:var(--saffron-dark);text-transform:uppercase;letter-spacing:.06rem;white-space:nowrap}
+  th.c,td.c{text-align:center}
+  td{padding:.75rem .75rem;border-bottom:1px solid rgba(229,201,122,.3);color:var(--text);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr.paid-row{background:var(--success-bg)}
+  tr.paid-row td{color:#2E7D32}
+  .name-cell{font-weight:600}
+  .amt{font-weight:500;font-family:monospace;font-size:.9rem;color:var(--saffron-dark)}
+  tr.paid-row .amt{color:#2E7D32}
+  .cb-wrap{display:flex;align-items:center;justify-content:center}
+  .custom-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);background:white;cursor:pointer;appearance:none;-webkit-appearance:none;flex-shrink:0;position:relative;-webkit-tap-highlight-color:transparent}
+  .custom-check:checked{background:var(--success);border-color:var(--success)}
+  .custom-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:14px;font-weight:700;line-height:1}
+  .btn-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:1.1rem;padding:.35rem .55rem;border-radius:4px;-webkit-tap-highlight-color:transparent}
+  .btn-del:active{color:#e53935;background:#FFEBEE}
+  .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:.9rem}
+  .empty-icon{font-size:2.5rem;margin-bottom:.5rem}
+
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+  .modal{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+  .modal-icon{font-size:2rem;margin-bottom:.75rem}
+  .modal-title{font-family:'Noto Serif Sinhala',serif;font-size:.95rem;color:var(--text);margin-bottom:.4rem;font-weight:600}
+  .modal-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.5}
+  .btn-row{display:flex;gap:.75rem;margin-top:.25rem}
+  .btn-no{flex:1;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;background:white;font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:var(--text-muted)}
+  .btn-yes{flex:1;padding:.75rem;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:white;font-weight:600;background:var(--success)}
+  .btn-yes.red{background:#c62828}
+  .pwd-field{width:100%;padding:.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:1.4rem;text-align:center;letter-spacing:.4rem;outline:none;-webkit-appearance:none;font-family:monospace;margin-bottom:.4rem;background:var(--cream)}
+  .pwd-field:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+  .pwd-err{font-size:.8rem;color:#c62828;margin-bottom:.75rem;display:none}
+
+  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--maroon);color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="header-deco">🪷 ✦ 🪷</span>
+  <h1>පොසොන් මහා දන්සල</h1>
+  <p class="header-sub">දන්සල සඳහා දායකත්ව වාර්තාව</p>
+  <div class="lotus-divider"><span>☸</span></div>
+</div>
+<div id="status-bar">
+  <span class="sync-dot"></span>
+  <span id="status-text">සම්බන්ධ වෙමින්...</span>
+</div>
+
+<div class="main">
+  <!-- TOTALS -->
+  <div class="totals">
+    <div class="total-card">
+      <div class="total-label">එකතු මුදල</div>
+      <div class="total-amount"><span class="total-currency">රු. </span><span id="total-pending">0.00</span></div>
+    </div>
+    <div class="total-card paid">
+      <div class="total-label">ගෙවූ මුදල</div>
+      <div class="total-amount"><span class="total-currency">රු. </span><span id="total-paid">0.00</span></div>
+    </div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-section">
+    <div class="section-title">දායකයා එකතු කරන්න</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="inp-name">නම</label>
+        <input type="text" id="inp-name" placeholder="දායකයාගේ නම ඇතුළත් කරන්න" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="inp-amount">ගෙවිය යුතු මුදල (රු.)</label>
+        <input type="text" id="inp-amount" placeholder="0.00" inputmode="decimal" autocomplete="off">
+      </div>
+      <button class="btn-add" id="btn-add" type="button">✦ &nbsp;එකතු කරන්න</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <div class="table-header-row">
+      <span class="table-title">✦ දායකයන් ලැයිස්තුව</span>
+      <span class="count-badge" id="count-badge">0 දෙනා</span>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>නම</th>
+            <th class="c">ගෙවිය යුතු</th>
+            <th class="c">ගෙවූ ✓</th>
+            <th class="c"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="overlay" id="pwd-modal">
+  <div class="modal">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">මුරපදය ඇතුළත් කරන්න</div>
+    <div class="modal-sub" id="pwd-sub"></div>
+    <input type="password" class="pwd-field" id="pwd-input" placeholder="••••" maxlength="10" autocomplete="off">
+    <div class="pwd-err" id="pwd-err">⚠ වැරදි මුරපදයකි. නැවත උත්සාහ කරන්න.</div>
+    <div class="btn-row">
+      <button class="btn-no" id="pwd-cancel" type="button">අවලංගු</button>
+      <button class="btn-yes" id="pwd-ok" type="button">තහවුරු කරන්න</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="overlay" id="del-modal">
+  <div class="modal">
+    <div class="modal-icon">🗑</div>
+    <div class="modal-title">ඉවත් කරන්නද?</div>
+    <div class="modal-sub" id="del-name"></div>
+    <div class="btn-row">
+      <button class="btn-no" id="del-no" type="button">නැත</button>
+      <button class="btn-yes red" id="del-yes" type="button">ඔව්, ඉවත් කරන්න</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// ── FIREBASE CONFIG (hardcoded) ───────────
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBQeS1y9v033LXFkw2vfZZVTM416bLrgKY",
+  authDomain: "dansala-95329.firebaseapp.com",
+  databaseURL: "https://dansala-95329-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dansala-95329",
+  storageBucket: "dansala-95329.firebasestorage.app",
+  messagingSenderId: "383448639689",
+  appId: "1:383448639689:web:ad1fe1250a115ddb5e0518"
+};
+
+var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,PWD='1158',toastTmr=null;
+
+// ── FIREBASE ──────────────────────────────
+function initFB(){
+  try{
+    if(firebase.apps.length){
+      firebase.app().delete().then(doConnect).catch(doConnect);
+    } else {
+      doConnect();
+    }
+  } catch(e){ doConnect(); }
+}
+
+function doConnect(){
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    fbRef = db.ref('dansala/entries');
+    setStatus('syncing','සම්බන්ධ වෙමින්...');
+    fbRef.on('value', function(snap){
+      entries=[];
+      snap.forEach(function(c){ entries.push(c.val()); });
+      entries.sort(function(a,b){ return a.id - b.id; });
+      ready = true;
+      setStatus('online','🟢 Real-time Sync ක්‍රියාත්මකයි');
+      render();
+    }, function(err){
+      setStatus('error','Firebase Error: ' + err.code);
+    });
+  } catch(e){
+    setStatus('error','Error: ' + e.message);
+  }
+}
+
+function setStatus(cls,msg){
+  var bar = document.getElementById('status-bar');
+  bar.className = cls;
+  document.getElementById('status-text').textContent = msg;
+}
+
+// ── ADD ───────────────────────────────────
+function addEntry(){
+  if(!ready){ showToast('⚠ Firebase සම්බන්ධ නොවේ'); return; }
+  var nEl = document.getElementById('inp-name');
+  var aEl = document.getElementById('inp-amount');
+  var name = nEl.value.replace(/^\s+|\s+$/g,'');
+  var amt  = parseFloat(aEl.value.replace(/,/g,'').replace(/^\s+|\s+$/g,''));
+  if(!name){ showToast('⚠ නම ඇතුළත් කරන්න'); return; }
+  if(!amt||isNaN(amt)||amt<=0){ showToast('⚠ නිවැරදි මුදලක් ඇතුළත් කරන්න'); return; }
+  var id = Date.now();
+  setStatus('syncing','සමමුහුර්ත කරමින්...');
+  fbRef.child(String(id)).set({id:id, name:name, pending:amt, paid:false}, function(err){
+    if(!err){
+      nEl.value=''; aEl.value='';
+      showToast('✓ '+name+' ලැයිස්තුවට එකතු කරන ලදී');
+      nEl.focus();
+    } else {
+      showToast('⚠ '+err.message);
+    }
+  });
+}
+
+// ── PASSWORD ──────────────────────────────
+function askPwd(id){
+  pendingToggle = id;
+  var e = getEntry(id);
+  document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — '+(e.paid?'ගෙවීම ඉවත් කිරීමට':'ගෙවූ ලෙස සලකුණු කිරීමට') : '';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('pwd-err').style.display = 'none';
+  document.getElementById('pwd-modal').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('pwd-input').focus(); }, 150);
+}
+
+function submitPwd(){
+  if(document.getElementById('pwd-input').value === PWD){
+    document.getElementById('pwd-modal').style.display = 'none';
+    doToggle(pendingToggle);
+    pendingToggle = null;
+  } else {
+    document.getElementById('pwd-err').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function cancelPwd(){
+  document.getElementById('pwd-modal').style.display = 'none';
+  pendingToggle = null;
+  render();
+}
+
+// ── TOGGLE ────────────────────────────────
+function doToggle(id){
+  if(!ready) return;
+  var e = getEntry(id);
+  if(!e) return;
+  setStatus('syncing','සමමුහුර්ත කරමින්...');
+  fbRef.child(String(id)).update({paid:!e.paid});
+}
+
+// ── DELETE ────────────────────────────────
+function askDel(id){
+  pendingDel = id;
+  var e = getEntry(id);
+  document.getElementById('del-name').textContent = e ? '"'+e.name+'" ඉවත් කිරීමට අවශ්‍ය ද?' : '';
+  document.getElementById('del-modal').style.display = 'flex';
+}
+
+function confirmDel(yes){
+  document.getElementById('del-modal').style.display = 'none';
+  if(yes && pendingDel){
+    setStatus('syncing','සමමුහුර්ත කරමින්...');
+    fbRef.child(String(pendingDel)).remove(function(){ showToast('🗑 ඉවත් කරන ලදී'); });
+  }
+  pendingDel = null;
+}
+
+// ── RENDER ────────────────────────────────
+function fmt(n){ var x=(parseFloat(n)||0).toFixed(2).split('.'); x[0]=x[0].replace(/\B(?=(\d{3})+(?!\d))/g,','); return x.join('.'); }
+function getEntry(id){ for(var i=0;i<entries.length;i++){ if(entries[i].id===id) return entries[i]; } return null; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function render(){
+  var tbody = document.getElementById('tbody');
+  var tp=0, tpd=0;
+  for(var i=0;i<entries.length;i++){ tp+=entries[i].pending; if(entries[i].paid) tpd+=entries[i].pending; }
+  document.getElementById('total-pending').textContent = fmt(tp);
+  document.getElementById('total-paid').textContent    = fmt(tpd);
+  document.getElementById('count-badge').textContent   = entries.length+' දෙනා';
+
+  if(!entries.length){
+    tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>';
+    return;
+  }
+  var h='';
+  for(var j=0;j<entries.length;j++){
+    var e=entries[j];
+    h+='<tr class="'+(e.paid?'paid-row':'')+'">';
+    h+='<td class="name-cell">'+esc(e.name)+'</td>';
+    h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
+    h+='<td class="c"><div class="cb-wrap"><input type="checkbox" class="custom-check"'+(e.paid?' checked':'')+'data-id="'+e.id+'"></div></td>';
+    h+='<td class="c"><button class="btn-del" data-del="'+e.id+'" type="button">✕</button></td>';
+    h+='</tr>';
+  }
+  tbody.innerHTML = h;
+
+  var cbs = tbody.querySelectorAll('.custom-check');
+  for(var k=0;k<cbs.length;k++){ (function(el){
+    el.addEventListener('change',function(ev){
+      ev.preventDefault();
+      el.checked = !el.checked;
+      askPwd(parseInt(el.getAttribute('data-id'),10));
+    });
+  })(cbs[k]); }
+
+  var dels = tbody.querySelectorAll('.btn-del');
+  for(var m=0;m<dels.length;m++){ (function(el){
+    el.addEventListener('click',function(){ askDel(parseInt(el.getAttribute('data-del'),10)); });
+  })(dels[m]); }
+}
+
+// ── TOAST ─────────────────────────────────
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTmr);
+  toastTmr=setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+// ── EVENTS ────────────────────────────────
+document.getElementById('btn-add').addEventListener('click',addEntry);
+document.getElementById('inp-name').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('inp-amount').focus(); });
+document.getElementById('inp-amount').addEventListener('keydown',function(e){ if(e.key==='Enter') addEntry(); });
+document.getElementById('pwd-ok').addEventListener('click',submitPwd);
+document.getElementById('pwd-cancel').addEventListener('click',cancelPwd);
+document.getElementById('pwd-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter') submitPwd();
+  document.getElementById('pwd-err').style.display='none';
+});
+document.getElementById('del-yes').addEventListener('click',function(){ confirmDel(true); });
+document.getElementById('del-no').addEventListener('click',function(){ confirmDel(false); });
+
+// ── START ─────────────────────────────────
+initFB();
+</script>
+</body>
+</html>
