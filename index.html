@@ -347,7 +347,7 @@ function render(){
   for(var i=0;i<entries.length;i++){ tp+=entries[i].pending; if(entries[i].paid) tpd+=entries[i].pending; }
   document.getElementById('total-pending').textContent = fmt(tp);
   document.getElementById('total-paid').textContent    = fmt(tpd);
-  document.getElementById('count-badge').textContent   = entries.length+' දෙනා';
+  document.getElementById('count-badge').textContent   = entries.length;
 
   if(!entries.length){
     tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>';
