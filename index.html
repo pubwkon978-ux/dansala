@@ -119,7 +119,7 @@
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-pending">0.00</span></div>
     </div>
     <div class="total-card paid">
-      <div class="total-label">දැනට ලැබී ඇති මුදල්</div>
+      <div class="total-label">දැනට ලැබී ඇති මුදල</div>
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-paid">0.00</span></div>
     </div>
   </div>
@@ -192,6 +192,18 @@
   </div>
 </div>
 
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="success-modal">
+  <div class="modal">
+    <div class="modal-icon">🙏</div>
+    <div class="modal-title" id="success-title">සමූහයට එකතු කරන ලදී</div>
+    <div class="modal-sub" id="success-sub"></div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn-yes" id="success-ok" type="button" style="max-width:160px">හරි</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -199,7 +211,7 @@
 <script>
 // ── FIREBASE CONFIG (hardcoded) ───────────
 var FIREBASE_CONFIG = {
-  apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxx",
+  apiKey: "AIzaSyBQeS1y9v033LXFkw2vfZZVTM416bLrgKY",
   authDomain: "dansala-95329.firebaseapp.com",
   databaseURL: "https://dansala-95329-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "dansala-95329",
@@ -232,7 +244,7 @@ function doConnect(){
       snap.forEach(function(c){ entries.push(c.val()); });
       entries.sort(function(a,b){ return a.id - b.id; });
       ready = true;
-      setStatus('online','🟢 Real-time Sync ක්‍රියාත්මකයි');
+      setStatus('online','🟢 Real-time Sync');
       render();
     }, function(err){
       setStatus('error','Firebase Error: ' + err.code);
@@ -261,9 +273,7 @@ function addEntry(){
   setStatus('syncing','සමමුහුර්ත කරමින්...');
   fbRef.child(String(id)).set({id:id, name:name, pending:amt, paid:false}, function(err){
     if(!err){
-      nEl.value=''; aEl.value='';
-      showToast('✓ '+name+' ලැයිස්තුවට එකතු කරන ලදී');
-      nEl.focus();
+      showSuccessModal(name, amt);
     } else {
       showToast('⚠ '+err.message);
     }
@@ -378,6 +388,12 @@ function render(){
   })(dels[m]); }
 }
 
+// ── SUCCESS MODAL ────────────────────────
+function showSuccessModal(name, amt){
+  document.getElementById('success-sub').textContent = '"'+name+'" — රු. '+fmt(amt)+' ලැයිස්තුවට එකතු කරන ලදී.';
+  document.getElementById('success-modal').style.display = 'flex';
+}
+
 // ── TOAST ─────────────────────────────────
 function showToast(msg){
   var t=document.getElementById('toast');
@@ -398,6 +414,14 @@ document.getElementById('pwd-input').addEventListener('keydown',function(e){
 });
 document.getElementById('del-yes').addEventListener('click',function(){ confirmDel(true); });
 document.getElementById('del-no').addEventListener('click',function(){ confirmDel(false); });
+
+document.getElementById('success-ok').addEventListener('click', function(){
+  document.getElementById('success-modal').style.display = 'none';
+  var nEl = document.getElementById('inp-name');
+  var aEl = document.getElementById('inp-amount');
+  nEl.value = ''; aEl.value = '';
+  nEl.focus();
+});
 
 // ── START ─────────────────────────────────
 initFB();
