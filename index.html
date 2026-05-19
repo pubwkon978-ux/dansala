@@ -65,6 +65,7 @@
   .table-header-row{background:linear-gradient(135deg,var(--maroon),#5A1020);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between}
   .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.85rem;font-weight:600}
   .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(245,217,139,.3)}
+  .table-hint{color:rgba(245,217,139,.55);font-size:.65rem;margin-top:.15rem}
   .table-wrapper{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:300px}
   thead tr{background:var(--gold-bg);border-bottom:2px solid var(--border)}
@@ -74,7 +75,7 @@
   tr:last-child td{border-bottom:none}
   tr.paid-row{background:var(--success-bg)}
   tr.paid-row td{color:#2E7D32}
-  .name-cell{font-weight:600}
+  .name-cell{font-weight:600;user-select:none;-webkit-user-select:none}
   .amt{font-weight:500;font-family:monospace;font-size:.9rem;color:var(--saffron-dark)}
   tr.paid-row .amt{color:#2E7D32}
   .cb-wrap{display:flex;align-items:center;justify-content:center}
@@ -86,6 +87,36 @@
   .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:.9rem}
   .empty-icon{font-size:2.5rem;margin-bottom:.5rem}
 
+  /* Long press ripple effect */
+  .name-cell.pressing{
+    background:rgba(200,134,10,0.08);
+    border-radius:4px;
+    transition:background .1s;
+  }
+
+  /* Context menu (long press popup) */
+  .ctx-menu{
+    position:fixed;
+    background:white;
+    border-radius:14px;
+    box-shadow:0 8px 32px rgba(0,0,0,.22),0 2px 8px rgba(200,134,10,.15);
+    border:1.5px solid var(--border);
+    overflow:hidden;
+    z-index:2000;
+    min-width:200px;
+    animation:popIn .18s cubic-bezier(.34,1.56,.64,1);
+    transform-origin:top left;
+  }
+  @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+  .ctx-name{padding:.75rem 1rem .5rem;font-family:'Noto Serif Sinhala',serif;font-size:.82rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
+  .ctx-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;font-size:.88rem;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(229,201,122,.2);transition:background .12s}
+  .ctx-item:last-child{border-bottom:none}
+  .ctx-item:active{background:var(--gold-bg)}
+  .ctx-item .ctx-icon{font-size:1.1rem;flex-shrink:0}
+  .ctx-item.danger{color:#c62828}
+  .ctx-backdrop{position:fixed;inset:0;z-index:1999;}
+
+  /* Overlays */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
   .modal{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)}
   .modal-icon{font-size:2rem;margin-bottom:.75rem}
@@ -98,6 +129,11 @@
   .pwd-field{width:100%;padding:.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:1.4rem;text-align:center;letter-spacing:.4rem;outline:none;-webkit-appearance:none;font-family:monospace;margin-bottom:.4rem;background:var(--cream)}
   .pwd-field:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
   .pwd-err{font-size:.8rem;color:#c62828;margin-bottom:.75rem;display:none}
+
+  /* Edit modal specifics */
+  .edit-fields{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;text-align:left}
+  .edit-fields label{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06rem;display:block;margin-bottom:.3rem}
+  .edit-fields input[type="text"]{font-size:.95rem}
 
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--maroon);color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0)}
@@ -149,7 +185,9 @@
   <!-- TABLE -->
   <div class="table-section">
     <div class="table-header-row">
-      <span class="table-title">✦ දායකයන් ලැයිස්තුව</span>
+      <div>
+        <span class="table-title">✦ දායකයන් ලැයිස්තුව</span>
+      </div>
       <span class="count-badge" id="count-badge">0</span>
     </div>
     <div class="search-wrap">
@@ -159,7 +197,7 @@
       <table>
         <thead>
           <tr>
-            <th>නම</th>
+            <th>නම <span style="font-weight:400;opacity:.6;font-size:.65rem"></span></th>
             <th class="c">මුදල</th>
             <th class="c">ලැබී ඇත✓</th>
             <th class="c"></th>
@@ -213,12 +251,49 @@
   </div>
 </div>
 
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-icon">✏️</div>
+    <div class="modal-title">සංස්කරණය කරන්න</div>
+    <div class="edit-fields">
+      <div>
+        <label for="edit-name">නම</label>
+        <input type="text" id="edit-name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div>
+        <label for="edit-amount">මුදල (රු.)</label>
+        <input type="text" id="edit-amount" inputmode="decimal" autocomplete="off">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-no" id="edit-cancel" type="button">අවලංගු</button>
+      <button class="btn-yes" id="edit-ok" type="button">✦ &nbsp;සුරකින්න</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXT MENU BACKDROP -->
+<div class="ctx-backdrop" id="ctx-backdrop" style="display:none"></div>
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctx-menu" style="display:none">
+  <div class="ctx-name" id="ctx-name-label"></div>
+  <div class="ctx-item" id="ctx-edit">
+    <span class="ctx-icon">✏️</span>
+    <span>සංස්කරණය කරන්න</span>
+  </div>
+  <div class="ctx-item danger" id="ctx-del">
+    <span class="ctx-icon">🗑</span>
+    <span>ඉවත් කරන්න</span>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-// ── FIREBASE CONFIG (hardcoded) ───────────
+// ── FIREBASE CONFIG ───────────────────────
 var FIREBASE_CONFIG = {
   apiKey: "AIzaSyBQeS1y9v033LXFkw2vfZZVTM416bLrgKY",
   authDomain: "dansala-95329.firebaseapp.com",
@@ -229,16 +304,15 @@ var FIREBASE_CONFIG = {
   appId: "1:383448639689:web:ad1fe1250a115ddb5e0518"
 };
 
-var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,searchQ="",PWD='1157',toastTmr=null;
+var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,pendingEdit=null,searchQ="",PWD='1157',toastTmr=null;
+var pwdAction=null; // 'toggle' or 'edit'
 
 // ── FIREBASE ──────────────────────────────
 function initFB(){
   try{
     if(firebase.apps.length){
       firebase.app().delete().then(doConnect).catch(doConnect);
-    } else {
-      doConnect();
-    }
+    } else { doConnect(); }
   } catch(e){ doConnect(); }
 }
 
@@ -258,9 +332,7 @@ function doConnect(){
     }, function(err){
       setStatus('error','Firebase Error: ' + err.code);
     });
-  } catch(e){
-    setStatus('error','Error: ' + e.message);
-  }
+  } catch(e){ setStatus('error','Error: ' + e.message); }
 }
 
 function setStatus(cls,msg){
@@ -281,19 +353,23 @@ function addEntry(){
   var id = Date.now();
   setStatus('syncing','සමමුහුර්ත කරමින්...');
   fbRef.child(String(id)).set({id:id, name:name, pending:amt, paid:false}, function(err){
-    if(!err){
-      showSuccessModal(name, amt);
-    } else {
-      showToast('⚠ '+err.message);
-    }
+    if(!err){ showSuccessModal(name, amt); }
+    else { showToast('⚠ '+err.message); }
   });
 }
 
 // ── PASSWORD ──────────────────────────────
-function askPwd(id){
-  pendingToggle = id;
-  var e = getEntry(id);
-  document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — '+(e.paid?'ගෙවීම ඉවත් කිරීමට':'ගෙවූ ලෙස සලකුණු කිරීමට') : '';
+function askPwd(id, action){
+  pwdAction = action || 'toggle';
+  if(pwdAction === 'toggle'){
+    pendingToggle = id;
+    var e = getEntry(id);
+    document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — '+(e.paid?'ගෙවීම ඉවත් කිරීමට':'ගෙවූ ලෙස සලකුණු කිරීමට') : '';
+  } else if(pwdAction === 'edit'){
+    pendingEdit = id;
+    var e2 = getEntry(id);
+    document.getElementById('pwd-sub').textContent = e2 ? '"'+e2.name+'" — සංස්කරණය කිරීමට' : '';
+  }
   document.getElementById('pwd-input').value = '';
   document.getElementById('pwd-err').style.display = 'none';
   document.getElementById('pwd-modal').style.display = 'flex';
@@ -303,21 +379,22 @@ function askPwd(id){
 function submitPwd(){
   if(document.getElementById('pwd-input').value === PWD){
     document.getElementById('pwd-modal').style.display = 'none';
-    var id = pendingToggle;
-    pendingToggle = null;
-    // Optimistic local update — update span directly + entries array
-    var e = getEntry(id);
-    if(e){
-      e.paid = !e.paid;
-      // Update the span directly for instant visual feedback
-      var span = document.querySelector('.cb-btn[data-id="'+id+'"]');
-      if(span){
-        if(e.paid){ span.classList.add('is-checked'); span.textContent='✓'; }
-        else { span.classList.remove('is-checked'); span.textContent=''; }
+    if(pwdAction === 'toggle'){
+      var id = pendingToggle;
+      pendingToggle = null;
+      var e = getEntry(id);
+      if(e){
+        e.paid = !e.paid;
+        render();
+        doToggle(id, e.paid);
       }
-      render();
+    } else if(pwdAction === 'edit'){
+      var eid = pendingEdit;
+      pendingEdit = null;
+      pwdAction = null;
+      openEditModal(eid);
     }
-    doToggle(id, e ? e.paid : null);
+    pwdAction = null;
   } else {
     document.getElementById('pwd-err').style.display = 'block';
     document.getElementById('pwd-input').value = '';
@@ -328,6 +405,8 @@ function submitPwd(){
 function cancelPwd(){
   document.getElementById('pwd-modal').style.display = 'none';
   pendingToggle = null;
+  pendingEdit = null;
+  pwdAction = null;
   render();
 }
 
@@ -354,6 +433,76 @@ function confirmDel(yes){
   }
   pendingDel = null;
 }
+
+// ── EDIT ─────────────────────────────────
+function openEditModal(id){
+  var e = getEntry(id);
+  if(!e) return;
+  pendingEdit = id;
+  document.getElementById('edit-name').value = e.name;
+  document.getElementById('edit-amount').value = e.pending;
+  document.getElementById('edit-modal').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('edit-name').focus(); }, 150);
+}
+
+function saveEdit(){
+  var newName = document.getElementById('edit-name').value.replace(/^\s+|\s+$/g,'');
+  var newAmt  = parseFloat(document.getElementById('edit-amount').value.replace(/,/g,'').replace(/^\s+|\s+$/g,''));
+  if(!newName){ showToast('⚠ නම ඇතුළත් කරන්න'); return; }
+  if(!newAmt||isNaN(newAmt)||newAmt<=0){ showToast('⚠ නිවැරදි මුදලක් ඇතුළත් කරන්න'); return; }
+  document.getElementById('edit-modal').style.display = 'none';
+  if(!ready || !pendingEdit){ return; }
+  setStatus('syncing','සමමුහුර්ත කරමින්...');
+  fbRef.child(String(pendingEdit)).update({name:newName, pending:newAmt}, function(err){
+    if(!err){ showToast('✔ සාර්ථකව යාවත්කාලීන කරන ලදී'); }
+    else { showToast('⚠ '+err.message); }
+  });
+  pendingEdit = null;
+}
+
+// ── CONTEXT MENU (long press) ─────────────
+var ctxId = null, lpTimer = null, lpActive = false;
+
+function showCtxMenu(id, touchX, touchY){
+  ctxId = id;
+  var e = getEntry(id);
+  if(!e) return;
+  document.getElementById('ctx-name-label').textContent = e.name;
+  var menu = document.getElementById('ctx-menu');
+  menu.style.display = 'block';
+  document.getElementById('ctx-backdrop').style.display = 'block';
+
+  // Position near touch point, keeping within viewport
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var mw = 210, mh = 140;
+  var left = Math.min(touchX, vw - mw - 12);
+  var top  = Math.min(touchY, vh - mh - 12);
+  if(top < 12) top = 12;
+  if(left < 12) left = 12;
+  menu.style.left = left + 'px';
+  menu.style.top  = top  + 'px';
+}
+
+function hideCtxMenu(){
+  document.getElementById('ctx-menu').style.display = 'none';
+  document.getElementById('ctx-backdrop').style.display = 'none';
+  ctxId = null;
+}
+
+document.getElementById('ctx-backdrop').addEventListener('touchstart', function(e){ e.preventDefault(); hideCtxMenu(); }, {passive:false});
+document.getElementById('ctx-backdrop').addEventListener('click', hideCtxMenu);
+
+document.getElementById('ctx-edit').addEventListener('click', function(){
+  var id = ctxId;
+  hideCtxMenu();
+  askPwd(id, 'edit');
+});
+
+document.getElementById('ctx-del').addEventListener('click', function(){
+  var id = ctxId;
+  hideCtxMenu();
+  askDel(id);
+});
 
 // ── RENDER ────────────────────────────────
 function fmt(n){ var x=(parseFloat(n)||0).toFixed(2).split('.'); x[0]=x[0].replace(/\B(?=(\d{3})+(?!\d))/g,','); return x.join('.'); }
@@ -384,7 +533,7 @@ function render(){
     var e=filtered[j];
     var displayName = q ? e.name.replace(new RegExp('('+escRe(q)+')', 'gi'), '<mark class="highlight">$1</mark>') : esc(e.name);
     h+='<tr class="'+(e.paid?'paid-row':'')+'">';
-    h+='<td class="name-cell">'+displayName+'</td>';
+    h+='<td class="name-cell longpress-target" data-id="'+e.id+'">'+displayName+'</td>';
     h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
     h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></div></td>';
     h+='<td class="c"><button class="btn-del" data-del="'+e.id+'" type="button">✕</button></td>';
@@ -392,17 +541,66 @@ function render(){
   }
   tbody.innerHTML = h;
 
+  // Checkbox click
   var cbs = tbody.querySelectorAll('.cb-btn');
   for(var k=0;k<cbs.length;k++){ (function(el){
     el.addEventListener('click',function(){
-      askPwd(parseInt(el.getAttribute('data-id'),10));
+      askPwd(parseInt(el.getAttribute('data-id'),10), 'toggle');
     });
   })(cbs[k]); }
 
+  // Delete button
   var dels = tbody.querySelectorAll('.btn-del');
   for(var m=0;m<dels.length;m++){ (function(el){
     el.addEventListener('click',function(){ askDel(parseInt(el.getAttribute('data-del'),10)); });
   })(dels[m]); }
+
+  // Long press on name cells
+  var names = tbody.querySelectorAll('.longpress-target');
+  for(var n=0;n<names.length;n++){ (function(el){
+    var tid = parseInt(el.getAttribute('data-id'),10);
+    var lpt = null, startX=0, startY=0, moved=false;
+
+    el.addEventListener('touchstart', function(ev){
+      moved = false;
+      startX = ev.touches[0].clientX;
+      startY = ev.touches[0].clientY;
+      el.classList.add('pressing');
+      lpt = setTimeout(function(){
+        if(!moved){
+          el.classList.remove('pressing');
+          // vibrate if supported
+          if(navigator.vibrate) navigator.vibrate(40);
+          showCtxMenu(tid, startX, startY);
+        }
+      }, 500);
+    }, {passive:true});
+
+    el.addEventListener('touchmove', function(ev){
+      var dx = ev.touches[0].clientX - startX;
+      var dy = ev.touches[0].clientY - startY;
+      if(Math.sqrt(dx*dx+dy*dy) > 8){
+        moved = true;
+        el.classList.remove('pressing');
+        clearTimeout(lpt);
+      }
+    }, {passive:true});
+
+    el.addEventListener('touchend', function(){
+      el.classList.remove('pressing');
+      clearTimeout(lpt);
+    });
+    el.addEventListener('touchcancel', function(){
+      el.classList.remove('pressing');
+      clearTimeout(lpt);
+    });
+
+    // Desktop: right-click or long mousedown
+    el.addEventListener('contextmenu', function(ev){
+      ev.preventDefault();
+      showCtxMenu(tid, ev.clientX, ev.clientY);
+    });
+  })(names[n]); }
 }
 
 // ── SUCCESS MODAL ────────────────────────
@@ -435,13 +633,23 @@ document.getElementById('pwd-input').addEventListener('keydown',function(e){
 });
 document.getElementById('del-yes').addEventListener('click',function(){ confirmDel(true); });
 document.getElementById('del-no').addEventListener('click',function(){ confirmDel(false); });
-
 document.getElementById('success-ok').addEventListener('click', function(){
   document.getElementById('success-modal').style.display = 'none';
   var nEl = document.getElementById('inp-name');
   var aEl = document.getElementById('inp-amount');
   nEl.value = ''; aEl.value = '';
   nEl.focus();
+});
+document.getElementById('edit-ok').addEventListener('click', saveEdit);
+document.getElementById('edit-cancel').addEventListener('click', function(){
+  document.getElementById('edit-modal').style.display = 'none';
+  pendingEdit = null;
+});
+document.getElementById('edit-name').addEventListener('keydown', function(e){
+  if(e.key==='Enter') document.getElementById('edit-amount').focus();
+});
+document.getElementById('edit-amount').addEventListener('keydown', function(e){
+  if(e.key==='Enter') saveEdit();
 });
 
 // ── START ─────────────────────────────────
