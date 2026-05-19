@@ -200,11 +200,10 @@
             <th>නම <span style="font-weight:400;opacity:.6;font-size:.65rem"></span></th>
             <th class="c">මුදල</th>
             <th class="c">ලැබී ඇත✓</th>
-            <th class="c"></th>
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>
+          <tr><td colspan="3"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -525,7 +524,7 @@ function render(){
   var q = searchQ.toLowerCase().replace(/^\s+|\s+$/g,'');
   var filtered = q ? entries.filter(function(e){ return e.name.toLowerCase().indexOf(q) !== -1; }) : entries;
   if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="4"><div class="no-results">🔍 "<b>'+esc(searchQ)+'</b>" සඳහා ප්‍රතිඵල නොමැත</div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="3"><div class="no-results">🔍 "<b>'+esc(searchQ)+'</b>" සඳහා ප්‍රතිඵල නොමැත</div></td></tr>';
     return;
   }
   var h='';
@@ -536,7 +535,6 @@ function render(){
     h+='<td class="name-cell longpress-target" data-id="'+e.id+'">'+displayName+'</td>';
     h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
     h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></div></td>';
-    h+='<td class="c"><button class="btn-del" data-del="'+e.id+'" type="button">✕</button></td>';
     h+='</tr>';
   }
   tbody.innerHTML = h;
@@ -548,12 +546,6 @@ function render(){
       askPwd(parseInt(el.getAttribute('data-id'),10), 'toggle');
     });
   })(cbs[k]); }
-
-  // Delete button
-  var dels = tbody.querySelectorAll('.btn-del');
-  for(var m=0;m<dels.length;m++){ (function(el){
-    el.addEventListener('click',function(){ askDel(parseInt(el.getAttribute('data-del'),10)); });
-  })(dels[m]); }
 
   // Long press on name cells
   var names = tbody.querySelectorAll('.longpress-target');
