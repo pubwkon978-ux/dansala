@@ -56,6 +56,12 @@
   .btn-add:active{opacity:.85}
 
   .table-section{background:white;border-radius:var(--radius);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+  .search-wrap{padding:.75rem 1rem;border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
+  .search-inp{width:100%;padding:.6rem .9rem .6rem 2.2rem;border:1.5px solid var(--border);border-radius:8px;font-family:"Noto Sans Sinhala",sans-serif;font-size:.88rem;color:var(--text);background:white;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A5C3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.65rem center;transition:border-color .2s}
+  .search-inp:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+  .search-inp::placeholder{color:#b8956a}
+  .no-results{text-align:center;padding:1.5rem;color:var(--text-muted);font-size:.85rem}
+  .highlight{background:#FFF176;border-radius:2px;padding:0 1px}
   .table-header-row{background:linear-gradient(135deg,var(--maroon),#5A1020);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between}
   .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.85rem;font-weight:600}
   .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(245,217,139,.3)}
@@ -115,11 +121,11 @@
   <!-- TOTALS -->
   <div class="totals">
     <div class="total-card">
-      <div class="total-label">පොරොන්දු මුදල</div>
+      <div class="total-label">ලැබීමට නියමිත මුදල</div>
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-pending">0.00</span></div>
     </div>
     <div class="total-card paid">
-      <div class="total-label">දැනට ලැබී ඇති මුදල</div>
+      <div class="total-label">ලැබී ඇති මුදල</div>
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-paid">0.00</span></div>
     </div>
   </div>
@@ -146,13 +152,16 @@
       <span class="table-title">✦ දායකයන් ලැයිස්තුව</span>
       <span class="count-badge" id="count-badge">0</span>
     </div>
+    <div class="search-wrap">
+      <input type="text" class="search-inp" id="search-inp" placeholder="නම සොයන්න..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th>නම</th>
             <th class="c">මුදල</th>
-            <th class="c">ලැබී ඇත ✓</th>
+            <th class="c">ලැබී ඇත✓</th>
             <th class="c"></th>
           </tr>
         </thead>
@@ -220,7 +229,7 @@ var FIREBASE_CONFIG = {
   appId: "1:383448639689:web:ad1fe1250a115ddb5e0518"
 };
 
-var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,PWD='1157',toastTmr=null;
+var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,searchQ="",PWD='1157',toastTmr=null;
 
 // ── FIREBASE ──────────────────────────────
 function initFB(){
@@ -244,7 +253,7 @@ function doConnect(){
       snap.forEach(function(c){ entries.push(c.val()); });
       entries.sort(function(a,b){ return a.id - b.id; });
       ready = true;
-      setStatus('online','🟢 Real-time Sync');
+      setStatus('online','Real-time Sync');
       render();
     }, function(err){
       setStatus('error','Firebase Error: ' + err.code);
@@ -349,6 +358,7 @@ function confirmDel(yes){
 // ── RENDER ────────────────────────────────
 function fmt(n){ var x=(parseFloat(n)||0).toFixed(2).split('.'); x[0]=x[0].replace(/\B(?=(\d{3})+(?!\d))/g,','); return x.join('.'); }
 function getEntry(id){ for(var i=0;i<entries.length;i++){ if(entries[i].id===id) return entries[i]; } return null; }
+function escRe(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function render(){
@@ -363,11 +373,18 @@ function render(){
     tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>';
     return;
   }
+  var q = searchQ.toLowerCase().replace(/^\s+|\s+$/g,'');
+  var filtered = q ? entries.filter(function(e){ return e.name.toLowerCase().indexOf(q) !== -1; }) : entries;
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="4"><div class="no-results">🔍 "<b>'+esc(searchQ)+'</b>" සඳහා ප්‍රතිඵල නොමැත</div></td></tr>';
+    return;
+  }
   var h='';
-  for(var j=0;j<entries.length;j++){
-    var e=entries[j];
+  for(var j=0;j<filtered.length;j++){
+    var e=filtered[j];
+    var displayName = q ? e.name.replace(new RegExp('('+escRe(q)+')', 'gi'), '<mark class="highlight">$1</mark>') : esc(e.name);
     h+='<tr class="'+(e.paid?'paid-row':'')+'">';
-    h+='<td class="name-cell">'+esc(e.name)+'</td>';
+    h+='<td class="name-cell">'+displayName+'</td>';
     h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
     h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></div></td>';
     h+='<td class="c"><button class="btn-del" data-del="'+e.id+'" type="button">✕</button></td>';
@@ -403,6 +420,10 @@ function showToast(msg){
 }
 
 // ── EVENTS ────────────────────────────────
+document.getElementById('search-inp').addEventListener('input',function(){
+  searchQ = this.value;
+  render();
+});
 document.getElementById('btn-add').addEventListener('click',addEntry);
 document.getElementById('inp-name').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('inp-amount').focus(); });
 document.getElementById('inp-amount').addEventListener('keydown',function(e){ if(e.key==='Enter') addEntry(); });
