@@ -55,6 +55,30 @@
   .btn-add{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--saffron) 0%,var(--gold) 100%);color:white;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:.1rem}
   .btn-add:active{opacity:.85}
 
+  /* ── ACCOUNT DETAILS ACCORDION ── */
+  .acc-wrap{padding:0 0 1.25rem}
+  .acc-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;background:white;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--maroon);transition:background .15s,border-color .15s;gap:.5rem;font-family:'Noto Sans Sinhala',sans-serif}
+  .acc-toggle:hover{background:var(--gold-bg);border-color:var(--gold)}
+  .acc-toggle-left{display:flex;align-items:center;gap:.6rem}
+  .acc-toggle .chev{font-size:.85rem;color:var(--gold);transition:transform .3s;line-height:1;flex-shrink:0}
+  .acc-toggle.open .chev{transform:rotate(180deg)}
+  .acc-body{overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+  .acc-body.open{max-height:320px;margin-top:.5rem}
+  .acc-card{background:white;border:1.5px solid var(--border);border-radius:10px;padding:1.1rem 1.1rem .9rem;box-shadow:var(--shadow)}
+  .acc-header{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem;padding-bottom:.75rem;border-bottom:1px solid rgba(229,201,122,.4)}
+  .acc-bank-icon{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--maroon),#4A0E1A);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+  .acc-bank-title{font-family:'Noto Serif Sinhala',serif;font-size:.88rem;font-weight:700;color:var(--maroon);line-height:1.3}
+  .acc-bank-sub{font-size:.72rem;color:var(--saffron-dark);margin-top:.15rem}
+  .acc-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;gap:.5rem}
+  .acc-row:not(:last-child){border-bottom:1px solid rgba(229,201,122,.25)}
+  .acc-row-label{font-size:.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05rem;flex-shrink:0}
+  .acc-row-right{display:flex;align-items:center;gap:.5rem;min-width:0}
+  .acc-value{font-size:.9rem;font-weight:600;color:var(--text);font-family:monospace;word-break:break-all}
+  .copy-btn{background:var(--gold-bg);border:1.5px solid var(--border);border-radius:6px;padding:.28rem .6rem;font-size:.72rem;color:var(--saffron-dark);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Noto Sans Sinhala',sans-serif;font-weight:600;transition:background .12s,border-color .12s;-webkit-tap-highlight-color:transparent}
+  .copy-btn:hover{background:#F5D98B;border-color:var(--gold)}
+  .copy-btn:active{opacity:.8}
+  .copy-btn.copied{background:var(--success-bg);border-color:#A5D6A7;color:var(--success)}
+
   .table-section{background:white;border-radius:var(--radius);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
   .search-wrap{padding:.75rem 1rem;border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
   .search-inp{width:100%;padding:.6rem .9rem .6rem 2.2rem;border:1.5px solid var(--border);border-radius:8px;font-family:"Noto Sans Sinhala",sans-serif;font-size:.88rem;color:var(--text);background:white;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A5C3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.65rem center;transition:border-color .2s}
@@ -65,7 +89,6 @@
   .table-header-row{background:linear-gradient(135deg,var(--maroon),#5A1020);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between}
   .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.85rem;font-weight:600}
   .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(245,217,139,.3)}
-  .table-hint{color:rgba(245,217,139,.55);font-size:.65rem;margin-top:.15rem}
   .table-wrapper{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:300px}
   thead tr{background:var(--gold-bg);border-bottom:2px solid var(--border)}
@@ -87,26 +110,9 @@
   .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:.9rem}
   .empty-icon{font-size:2.5rem;margin-bottom:.5rem}
 
-  /* Long press ripple effect */
-  .name-cell.pressing{
-    background:rgba(200,134,10,0.08);
-    border-radius:4px;
-    transition:background .1s;
-  }
+  .name-cell.pressing{background:rgba(200,134,10,0.08);border-radius:4px;transition:background .1s}
 
-  /* Context menu (long press popup) */
-  .ctx-menu{
-    position:fixed;
-    background:white;
-    border-radius:14px;
-    box-shadow:0 8px 32px rgba(0,0,0,.22),0 2px 8px rgba(200,134,10,.15);
-    border:1.5px solid var(--border);
-    overflow:hidden;
-    z-index:2000;
-    min-width:200px;
-    animation:popIn .18s cubic-bezier(.34,1.56,.64,1);
-    transform-origin:top left;
-  }
+  .ctx-menu{position:fixed;background:white;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22),0 2px 8px rgba(200,134,10,.15);border:1.5px solid var(--border);overflow:hidden;z-index:2000;min-width:200px;animation:popIn .18s cubic-bezier(.34,1.56,.64,1);transform-origin:top left}
   @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
   .ctx-name{padding:.75rem 1rem .5rem;font-family:'Noto Serif Sinhala',serif;font-size:.82rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
   .ctx-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;font-size:.88rem;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(229,201,122,.2);transition:background .12s}
@@ -114,9 +120,8 @@
   .ctx-item:active{background:var(--gold-bg)}
   .ctx-item .ctx-icon{font-size:1.1rem;flex-shrink:0}
   .ctx-item.danger{color:#c62828}
-  .ctx-backdrop{position:fixed;inset:0;z-index:1999;}
+  .ctx-backdrop{position:fixed;inset:0;z-index:1999}
 
-  /* Overlays */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
   .modal{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)}
   .modal-icon{font-size:2rem;margin-bottom:.75rem}
@@ -130,7 +135,6 @@
   .pwd-field:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
   .pwd-err{font-size:.8rem;color:#c62828;margin-bottom:.75rem;display:none}
 
-  /* Edit modal specifics */
   .edit-fields{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;text-align:left}
   .edit-fields label{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06rem;display:block;margin-bottom:.3rem}
   .edit-fields input[type="text"]{font-size:.95rem}
@@ -182,6 +186,42 @@
     </div>
   </div>
 
+  <!-- ACCOUNT DETAILS ACCORDION -->
+  <div class="acc-wrap">
+    <button class="acc-toggle" id="accToggle" type="button" aria-expanded="false">
+      <div class="acc-toggle-left">
+        <span style="font-size:1.05rem">🏦</span>
+        <span>ගිණුම් විස්තර</span>
+      </div>
+      <span class="chev">▼</span>
+    </button>
+    <div class="acc-body" id="accBody">
+      <div class="acc-card">
+        <div class="acc-header">
+          <div class="acc-bank-icon">💳</div>
+          <div>
+            <div class="acc-bank-title">මහජන බැංකුව</div>
+            <div class="acc-bank-sub">දන්සල දායකත්ව ගෙවීම සඳහා</div>
+          </div>
+        </div>
+        <div class="acc-row">
+          <span class="acc-row-label">ගිණුම් නම</span>
+          <div class="acc-row-right">
+            <span class="acc-value" id="accName">AMILA UDAYASHAN</span>
+            <button class="copy-btn" type="button" onclick="copyVal('accName',this)">පිටපත්</button>
+          </div>
+        </div>
+        <div class="acc-row">
+          <span class="acc-row-label">ගිණුම් අංකය</span>
+          <div class="acc-row-right">
+            <span class="acc-value" id="accNum">1000xxxxxxxxxx</span>
+            <button class="copy-btn" type="button" onclick="copyVal('accNum',this)">පිටපත්</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- TABLE -->
   <div class="table-section">
     <div class="table-header-row">
@@ -197,7 +237,7 @@
       <table>
         <thead>
           <tr>
-            <th>නම <span style="font-weight:400;opacity:.6;font-size:.65rem"></span></th>
+            <th>නම</th>
             <th class="c">මුදල</th>
             <th class="c">ලැබී ඇත✓</th>
           </tr>
@@ -304,7 +344,7 @@ var FIREBASE_CONFIG = {
 };
 
 var entries=[],db=null,fbRef=null,ready=false,pendingToggle=null,pendingDel=null,pendingEdit=null,searchQ="",PWD='1157',toastTmr=null;
-var pwdAction=null; // 'toggle' or 'edit'
+var pwdAction=null;
 
 // ── FIREBASE ──────────────────────────────
 function initFB(){
@@ -459,8 +499,37 @@ function saveEdit(){
   pendingEdit = null;
 }
 
+// ── ACCOUNT DETAILS ACCORDION ─────────────
+var accToggle = document.getElementById('accToggle');
+var accBody   = document.getElementById('accBody');
+accToggle.addEventListener('click', function(){
+  var open = accBody.classList.toggle('open');
+  accToggle.classList.toggle('open', open);
+  accToggle.setAttribute('aria-expanded', open);
+});
+
+function copyVal(id, btn){
+  var txt = document.getElementById(id).textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ showCopied(btn); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); showCopied(btn); } catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+
+function showCopied(btn){
+  var orig = btn.textContent;
+  btn.textContent = '✔ පිටපත් විය';
+  btn.classList.add('copied');
+  setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+}
+
 // ── CONTEXT MENU (long press) ─────────────
-var ctxId = null, lpTimer = null, lpActive = false;
+var ctxId = null;
 
 function showCtxMenu(id, touchX, touchY){
   ctxId = id;
@@ -470,8 +539,6 @@ function showCtxMenu(id, touchX, touchY){
   var menu = document.getElementById('ctx-menu');
   menu.style.display = 'block';
   document.getElementById('ctx-backdrop').style.display = 'block';
-
-  // Position near touch point, keeping within viewport
   var vw = window.innerWidth, vh = window.innerHeight;
   var mw = 210, mh = 140;
   var left = Math.min(touchX, vw - mw - 12);
@@ -492,15 +559,10 @@ document.getElementById('ctx-backdrop').addEventListener('touchstart', function(
 document.getElementById('ctx-backdrop').addEventListener('click', hideCtxMenu);
 
 document.getElementById('ctx-edit').addEventListener('click', function(){
-  var id = ctxId;
-  hideCtxMenu();
-  askPwd(id, 'edit');
+  var id = ctxId; hideCtxMenu(); askPwd(id, 'edit');
 });
-
 document.getElementById('ctx-del').addEventListener('click', function(){
-  var id = ctxId;
-  hideCtxMenu();
-  askDel(id);
+  var id = ctxId; hideCtxMenu(); askDel(id);
 });
 
 // ── RENDER ────────────────────────────────
@@ -518,7 +580,7 @@ function render(){
   document.getElementById('count-badge').textContent   = entries.length;
 
   if(!entries.length){
-    tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="3"><div class="empty-state"><div class="empty-icon">🪷</div><div>දායකයන් නොමැත</div><div style="font-size:.78rem;margin-top:.3rem">ඉහතින් නම හා මුදල ඇතුළත් කරන්න</div></div></td></tr>';
     return;
   }
   var q = searchQ.toLowerCase().replace(/^\s+|\s+$/g,'');
@@ -539,7 +601,6 @@ function render(){
   }
   tbody.innerHTML = h;
 
-  // Checkbox click
   var cbs = tbody.querySelectorAll('.cb-btn');
   for(var k=0;k<cbs.length;k++){ (function(el){
     el.addEventListener('click',function(){
@@ -547,51 +608,24 @@ function render(){
     });
   })(cbs[k]); }
 
-  // Long press on name cells
   var names = tbody.querySelectorAll('.longpress-target');
   for(var n=0;n<names.length;n++){ (function(el){
     var tid = parseInt(el.getAttribute('data-id'),10);
     var lpt = null, startX=0, startY=0, moved=false;
-
     el.addEventListener('touchstart', function(ev){
-      moved = false;
-      startX = ev.touches[0].clientX;
-      startY = ev.touches[0].clientY;
+      moved = false; startX = ev.touches[0].clientX; startY = ev.touches[0].clientY;
       el.classList.add('pressing');
       lpt = setTimeout(function(){
-        if(!moved){
-          el.classList.remove('pressing');
-          // vibrate if supported
-          if(navigator.vibrate) navigator.vibrate(40);
-          showCtxMenu(tid, startX, startY);
-        }
+        if(!moved){ el.classList.remove('pressing'); if(navigator.vibrate) navigator.vibrate(40); showCtxMenu(tid, startX, startY); }
       }, 500);
     }, {passive:true});
-
     el.addEventListener('touchmove', function(ev){
-      var dx = ev.touches[0].clientX - startX;
-      var dy = ev.touches[0].clientY - startY;
-      if(Math.sqrt(dx*dx+dy*dy) > 8){
-        moved = true;
-        el.classList.remove('pressing');
-        clearTimeout(lpt);
-      }
+      var dx = ev.touches[0].clientX - startX, dy = ev.touches[0].clientY - startY;
+      if(Math.sqrt(dx*dx+dy*dy) > 8){ moved = true; el.classList.remove('pressing'); clearTimeout(lpt); }
     }, {passive:true});
-
-    el.addEventListener('touchend', function(){
-      el.classList.remove('pressing');
-      clearTimeout(lpt);
-    });
-    el.addEventListener('touchcancel', function(){
-      el.classList.remove('pressing');
-      clearTimeout(lpt);
-    });
-
-    // Desktop: right-click or long mousedown
-    el.addEventListener('contextmenu', function(ev){
-      ev.preventDefault();
-      showCtxMenu(tid, ev.clientX, ev.clientY);
-    });
+    el.addEventListener('touchend', function(){ el.classList.remove('pressing'); clearTimeout(lpt); });
+    el.addEventListener('touchcancel', function(){ el.classList.remove('pressing'); clearTimeout(lpt); });
+    el.addEventListener('contextmenu', function(ev){ ev.preventDefault(); showCtxMenu(tid, ev.clientX, ev.clientY); });
   })(names[n]); }
 }
 
@@ -610,10 +644,7 @@ function showToast(msg){
 }
 
 // ── EVENTS ────────────────────────────────
-document.getElementById('search-inp').addEventListener('input',function(){
-  searchQ = this.value;
-  render();
-});
+document.getElementById('search-inp').addEventListener('input',function(){ searchQ = this.value; render(); });
 document.getElementById('btn-add').addEventListener('click',addEntry);
 document.getElementById('inp-name').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('inp-amount').focus(); });
 document.getElementById('inp-amount').addEventListener('keydown',function(e){ if(e.key==='Enter') addEntry(); });
@@ -627,22 +658,15 @@ document.getElementById('del-yes').addEventListener('click',function(){ confirmD
 document.getElementById('del-no').addEventListener('click',function(){ confirmDel(false); });
 document.getElementById('success-ok').addEventListener('click', function(){
   document.getElementById('success-modal').style.display = 'none';
-  var nEl = document.getElementById('inp-name');
-  var aEl = document.getElementById('inp-amount');
-  nEl.value = ''; aEl.value = '';
-  nEl.focus();
+  var nEl = document.getElementById('inp-name'), aEl = document.getElementById('inp-amount');
+  nEl.value = ''; aEl.value = ''; nEl.focus();
 });
 document.getElementById('edit-ok').addEventListener('click', saveEdit);
 document.getElementById('edit-cancel').addEventListener('click', function(){
-  document.getElementById('edit-modal').style.display = 'none';
-  pendingEdit = null;
+  document.getElementById('edit-modal').style.display = 'none'; pendingEdit = null;
 });
-document.getElementById('edit-name').addEventListener('keydown', function(e){
-  if(e.key==='Enter') document.getElementById('edit-amount').focus();
-});
-document.getElementById('edit-amount').addEventListener('keydown', function(e){
-  if(e.key==='Enter') saveEdit();
-});
+document.getElementById('edit-name').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('edit-amount').focus(); });
+document.getElementById('edit-amount').addEventListener('keydown', function(e){ if(e.key==='Enter') saveEdit(); });
 
 // ── START ─────────────────────────────────
 initFB();
