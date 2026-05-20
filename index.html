@@ -208,14 +208,14 @@
           <span class="acc-row-label">ගිණුම් නම</span>
           <div class="acc-row-right">
             <span class="acc-value" id="accName">AMILA UDAYASHAN</span>
-            <button class="copy-btn" type="button" onclick="copyVal('accName',this)">පිටපත්</button>
+            <button class="copy-btn" type="button" onclick="copyVal('accName',this)">Copy</button>
           </div>
         </div>
         <div class="acc-row">
           <span class="acc-row-label">ගිණුම් අංකය</span>
           <div class="acc-row-right">
             <span class="acc-value" id="accNum">1000xxxxxxxxxx</span>
-            <button class="copy-btn" type="button" onclick="copyVal('accNum',this)">පිටපත්</button>
+            <button class="copy-btn" type="button" onclick="copyVal('accNum',this)">Copy</button>
           </div>
         </div>
       </div>
@@ -523,7 +523,7 @@ function copyVal(id, btn){
 
 function showCopied(btn){
   var orig = btn.textContent;
-  btn.textContent = '✔ පිටපත් විය';
+  btn.textContent = '✔ copied';
   btn.classList.add('copied');
   setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
 }
