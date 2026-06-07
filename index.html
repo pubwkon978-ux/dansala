@@ -25,7 +25,6 @@
   .lotus-divider::before,.lotus-divider::after{content:'';flex:1;height:1px;background:var(--gold-light);opacity:.4}
   .lotus-divider span{color:var(--gold-light);font-size:1rem}
 
-  /* ── YEAR TABS ── */
   .year-tabs{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;padding:0 1rem 1.1rem;position:relative}
   .year-btn{padding:.45rem 1.1rem;border-radius:50px;border:1.5px solid rgba(245,217,139,.35);background:rgba(245,217,139,.08);color:var(--gold-light);font-family:'Noto Sans Sinhala',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .18s,border-color .18s,color .18s,transform .12s;-webkit-tap-highlight-color:transparent;letter-spacing:.04rem}
   .year-btn:active{transform:scale(.95)}
@@ -42,10 +41,72 @@
 
   .main{padding:1.25rem 1rem;max-width:600px;margin:0 auto}
 
-  /* active year label */
-  .year-label{font-family:'Noto Serif Sinhala',serif;font-size:.82rem;font-weight:700;color:var(--maroon);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  /* ── YEAR LABEL (centered) ── */
+  .year-label{
+    font-family:'Noto Serif Sinhala',serif;font-size:.85rem;font-weight:700;
+    color:var(--maroon);margin-bottom:.85rem;
+    display:flex;align-items:center;justify-content:center;gap:.5rem;
+    text-align:center;
+  }
   .year-label-dot{width:8px;height:8px;border-radius:50%;background:var(--saffron);flex-shrink:0}
 
+  /* ── GRAND TOTAL CARD ── */
+  .grand-total-wrap{
+    margin-bottom:.85rem;
+    display:flex;justify-content:center;
+  }
+  .grand-total-card{
+    position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--maroon) 0%,#6B1428 45%,#3A0A10 100%);
+    border-radius:16px;
+    padding:1.25rem 1.5rem 1.1rem;
+    border:1.5px solid rgba(245,217,139,.25);
+    box-shadow:0 6px 28px rgba(123,28,46,.35),0 2px 8px rgba(200,134,10,.18),inset 0 1px 0 rgba(245,217,139,.15);
+    text-align:center;
+    width:100%;
+    max-width:420px;
+  }
+  /* shimmer sweep */
+  .grand-total-card::before{
+    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(245,217,139,.10),transparent);
+    animation:shimmer 3.2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes shimmer{0%{left:-100%}60%,100%{left:160%}}
+  /* decorative glow dots */
+  .grand-total-card::after{
+    content:'🪷';position:absolute;right:1rem;top:.65rem;
+    font-size:1.2rem;opacity:.25;pointer-events:none;
+    animation:floatLotus 4s ease-in-out infinite;
+  }
+  @keyframes floatLotus{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-4px) rotate(5deg)}}
+  .gt-label{
+    font-size:.7rem;font-weight:600;letter-spacing:.12rem;text-transform:uppercase;
+    color:rgba(245,217,139,.65);margin-bottom:.45rem;
+  }
+  .gt-amount-wrap{display:flex;align-items:baseline;justify-content:center;gap:.35rem}
+  .gt-currency{font-size:.95rem;font-weight:600;color:var(--gold-light);opacity:.85}
+  .gt-amount{
+    font-size:clamp(1.8rem,7vw,2.4rem);font-weight:700;
+    color:var(--gold-light);
+    text-shadow:0 2px 12px rgba(200,134,10,.4);
+    font-family:'Noto Serif Sinhala',serif;
+    letter-spacing:.02rem;
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .gt-amount.bump{transform:scale(1.08)}
+  .gt-divider{
+    width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,217,139,.4),transparent);
+    margin:.75rem auto .65rem;
+  }
+  .gt-sub-row{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+  .gt-sub{text-align:center}
+  .gt-sub-lbl{font-size:.64rem;color:rgba(245,217,139,.5);font-weight:600;text-transform:uppercase;letter-spacing:.08rem;margin-bottom:.2rem}
+  .gt-sub-val{font-size:.88rem;font-weight:700;color:rgba(245,217,139,.8);font-family:monospace}
+  .gt-sub-val.green{color:#86efac}
+
+  /* ── EXISTING TOTALS ── */
   .totals{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
   .total-card{background:white;border-radius:var(--radius);padding:1rem;border:1.5px solid var(--border);box-shadow:var(--shadow);text-align:center}
   .total-card.paid{border-color:#A5D6A7}
@@ -155,7 +216,6 @@
   <h1>පොසොන් මහා බත් දන්සල</h1>
   <p class="header-sub">දන්සල සඳහා දායකත්ව වාර්තාව</p>
   <div class="lotus-divider"><span>☸</span></div>
-  <!-- YEAR TABS -->
   <div class="year-tabs" id="year-tabs"></div>
 </div>
 
@@ -166,11 +226,25 @@
 
 <div class="main">
 
+  <!-- YEAR LABEL (centered) -->
   <div class="year-label">
     <span class="year-label-dot"></span>
     <span id="year-label-text"></span>
   </div>
 
+  <!-- GRAND TOTAL CARD -->
+  <div class="grand-total-wrap">
+    <div class="grand-total-card">
+      <div class="gt-label">සම්පූර්ණ  මුදල</div>
+      <div class="gt-amount-wrap">
+        <span class="gt-currency">රු.</span>
+        <span class="gt-amount" id="grand-total">0.00</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EXISTING TWO CARDS -->
   <div class="totals">
     <div class="total-card">
       <div class="total-label">ලැබීමට නියමිත මුදල</div>
@@ -342,22 +416,19 @@ var FIREBASE_CONFIG = {
   appId: "1:383448639689:web:ad1fe1250a115ddb5e0518"
 };
 
-// ── YEAR CONFIG ───────────────────────────
 var START_YEAR = 2025;
 var CURRENT_YEAR = new Date().getFullYear();
 var activeYear = CURRENT_YEAR;
 
 var entries=[],db=null,fbRef=null,activeRef=null,ready=false,searchQ="",PWD='1157',toastTmr=null;
 var pendingToggle=null, pendingDel=null, pendingEdit=null, pwdAction=null;
+var gtBumpTimer=null;
 
-// ── BUILD YEAR TABS ───────────────────────
+// ── YEAR TABS ─────────────────────────────
 function buildYearTabs(){
   var wrap = document.getElementById('year-tabs');
   wrap.innerHTML = '';
-  // Show from START_YEAR up to CURRENT_YEAR
-  // Next year button appears automatically when year changes
-  var endYear = CURRENT_YEAR;
-  for(var y = START_YEAR; y <= endYear; y++){
+  for(var y = START_YEAR; y <= CURRENT_YEAR; y++){
     (function(yr){
       var btn = document.createElement('button');
       btn.className = 'year-btn' + (yr === CURRENT_YEAR ? ' current-year' : '') + (yr === activeYear ? ' active' : '');
@@ -367,14 +438,9 @@ function buildYearTabs(){
       wrap.appendChild(btn);
     })(y);
   }
-  // update label
-  var isCurrentYr = activeYear === CURRENT_YEAR;
-  document.getElementById('year-label-text').textContent =
-    activeYear + ' පොසොන් දන්සල' ;
-  document.getElementById('add-section-title').textContent =
-    activeYear + ' — දායකයා එකතු කරන්න';
-  document.getElementById('table-title').textContent =
-    '✦ ' + activeYear + ' දායකයන් ලැයිස්තුව';
+  document.getElementById('year-label-text').textContent = activeYear + ' පොසොන් දන්සල';
+  document.getElementById('add-section-title').textContent = activeYear + ' — දායකයා එකතු කරන්න';
+  document.getElementById('table-title').textContent = '✦ ' + activeYear + ' දායකයන් ලැයිස්තුව';
 }
 
 function switchYear(yr){
@@ -404,14 +470,11 @@ function doConnect(){
 }
 
 function subscribeYear(){
-  // Detach old listener
   if(activeRef){ activeRef.off(); }
-  entries = [];
-  ready = false;
-  render();
+  entries = []; ready = false; render();
   setStatus('syncing','සම්බන්ධ වෙමින්...');
   activeRef = db.ref('dansala/' + activeYear + '/entries');
-  fbRef = activeRef; // keep fbRef in sync for write operations
+  fbRef = activeRef;
   activeRef.on('value', function(snap){
     entries = [];
     snap.forEach(function(c){ entries.push(c.val()); });
@@ -423,9 +486,8 @@ function subscribeYear(){
 }
 
 function setStatus(cls,msg){
-  var bar=document.getElementById('status-bar');
-  bar.className=cls;
-  document.getElementById('status-text').textContent=msg;
+  document.getElementById('status-bar').className = cls;
+  document.getElementById('status-text').textContent = msg;
 }
 
 // ── ADD ───────────────────────────────────
@@ -477,8 +539,8 @@ function submitPwd(){
       pwdAction = null;
       openEditModal(eid);
     } else if(pwdAction === 'delete'){
-      var e = getEntry(pendingDel);
-      document.getElementById('del-sub').textContent = e ? '"'+e.name+'" ඉවත් කිරීමට අවශ්‍ය ද?' : '';
+      var e2 = getEntry(pendingDel);
+      document.getElementById('del-sub').textContent = e2 ? '"'+e2.name+'" ඉවත් කිරීමට අවශ්‍ය ද?' : '';
       document.getElementById('del-modal').style.display = 'flex';
     }
     pwdAction = null;
@@ -495,7 +557,6 @@ function cancelPwd(){
   render();
 }
 
-// ── TOGGLE ────────────────────────────────
 function doToggle(id, newVal){
   if(!ready) return;
   setStatus('syncing','සමමුහුර්ත කරමින්...');
@@ -596,6 +657,15 @@ function getEntry(id){ for(var i=0;i<entries.length;i++){ if(entries[i].id===id)
 function escRe(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+function bumpGT(){
+  var el=document.getElementById('grand-total');
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+  clearTimeout(gtBumpTimer);
+  gtBumpTimer=setTimeout(function(){ el.classList.remove('bump'); },300);
+}
+
 function render(){
   var tbody=document.getElementById('tbody');
   var tp=0,tpd=0;
@@ -603,6 +673,14 @@ function render(){
     if(entries[i].paid){ tpd+=entries[i].pending; }
     else { tp+=entries[i].pending; }
   }
+  var grandTotal = tp + tpd;
+
+  // Update grand total card
+  var gtEl=document.getElementById('grand-total');
+  var prevGT=gtEl.textContent;
+  var newGT=fmt(grandTotal);
+  if(prevGT!==newGT){ gtEl.textContent=newGT; bumpGT(); }
+  // Update existing cards
   document.getElementById('total-pending').textContent=fmt(tp);
   document.getElementById('total-paid').textContent=fmt(tpd);
   document.getElementById('count-badge').textContent=entries.length;
@@ -629,41 +707,28 @@ function render(){
   }
   tbody.innerHTML=h;
 
-  // Checkbox click → password → toggle
   var cbs=tbody.querySelectorAll('.cb-btn');
   for(var k=0;k<cbs.length;k++){ (function(el){
     el.addEventListener('click',function(){ askPwd(parseInt(el.getAttribute('data-id'),10),'toggle'); });
   })(cbs[k]); }
 
-  // Long press → context menu
   var names=tbody.querySelectorAll('.longpress-target');
   for(var n=0;n<names.length;n++){ (function(el){
     var tid=parseInt(el.getAttribute('data-id'),10);
     var lpt=null,startX=0,startY=0,moved=false;
-    el.addEventListener('touchstart',function(ev){
-      moved=false; startX=ev.touches[0].clientX; startY=ev.touches[0].clientY;
-      el.classList.add('pressing');
-      lpt=setTimeout(function(){
-        if(!moved){ el.classList.remove('pressing'); if(navigator.vibrate)navigator.vibrate(40); showCtxMenu(tid,startX,startY); }
-      },500);
-    },{passive:true});
-    el.addEventListener('touchmove',function(ev){
-      var dx=ev.touches[0].clientX-startX,dy=ev.touches[0].clientY-startY;
-      if(Math.sqrt(dx*dx+dy*dy)>8){ moved=true; el.classList.remove('pressing'); clearTimeout(lpt); }
-    },{passive:true});
+    el.addEventListener('touchstart',function(ev){ moved=false; startX=ev.touches[0].clientX; startY=ev.touches[0].clientY; el.classList.add('pressing'); lpt=setTimeout(function(){ if(!moved){ el.classList.remove('pressing'); if(navigator.vibrate)navigator.vibrate(40); showCtxMenu(tid,startX,startY); } },500); },{passive:true});
+    el.addEventListener('touchmove',function(ev){ var dx=ev.touches[0].clientX-startX,dy=ev.touches[0].clientY-startY; if(Math.sqrt(dx*dx+dy*dy)>8){ moved=true; el.classList.remove('pressing'); clearTimeout(lpt); } },{passive:true});
     el.addEventListener('touchend',function(){ el.classList.remove('pressing'); clearTimeout(lpt); });
     el.addEventListener('touchcancel',function(){ el.classList.remove('pressing'); clearTimeout(lpt); });
     el.addEventListener('contextmenu',function(ev){ ev.preventDefault(); showCtxMenu(tid,ev.clientX,ev.clientY); });
   })(names[n]); }
 }
 
-// ── SUCCESS MODAL ─────────────────────────
 function showSuccessModal(name,amt){
   document.getElementById('success-sub').textContent='"'+name+'" — රු. '+fmt(amt)+' ('+activeYear+') ලැයිස්තුවට එකතු කරන ලදී.';
   document.getElementById('success-modal').style.display='flex';
 }
 
-// ── TOAST ─────────────────────────────────
 function showToast(msg){
   var t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
@@ -671,28 +736,18 @@ function showToast(msg){
   toastTmr=setTimeout(function(){ t.classList.remove('show'); },2500);
 }
 
-// ── EVENTS ────────────────────────────────
 document.getElementById('search-inp').addEventListener('input',function(){ searchQ=this.value; render(); });
 document.getElementById('btn-add').addEventListener('click',addEntry);
 document.getElementById('inp-name').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('inp-amount').focus(); });
 document.getElementById('inp-amount').addEventListener('keydown',function(e){ if(e.key==='Enter') addEntry(); });
 document.getElementById('pwd-ok').addEventListener('click',submitPwd);
 document.getElementById('pwd-cancel').addEventListener('click',cancelPwd);
-document.getElementById('pwd-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter') submitPwd();
-  document.getElementById('pwd-err').style.display='none';
-});
+document.getElementById('pwd-input').addEventListener('keydown',function(e){ if(e.key==='Enter') submitPwd(); document.getElementById('pwd-err').style.display='none'; });
 document.getElementById('del-yes').addEventListener('click',function(){ confirmDel(true); });
 document.getElementById('del-no').addEventListener('click',function(){ confirmDel(false); });
-document.getElementById('success-ok').addEventListener('click',function(){
-  document.getElementById('success-modal').style.display='none';
-  var nEl=document.getElementById('inp-name'),aEl=document.getElementById('inp-amount');
-  nEl.value=''; aEl.value=''; nEl.focus();
-});
+document.getElementById('success-ok').addEventListener('click',function(){ document.getElementById('success-modal').style.display='none'; var nEl=document.getElementById('inp-name'),aEl=document.getElementById('inp-amount'); nEl.value=''; aEl.value=''; nEl.focus(); });
 document.getElementById('edit-ok').addEventListener('click',saveEdit);
-document.getElementById('edit-cancel').addEventListener('click',function(){
-  document.getElementById('edit-modal').style.display='none'; pendingEdit=null;
-});
+document.getElementById('edit-cancel').addEventListener('click',function(){ document.getElementById('edit-modal').style.display='none'; pendingEdit=null; });
 document.getElementById('edit-name').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('edit-amount').focus(); });
 document.getElementById('edit-amount').addEventListener('keydown',function(e){ if(e.key==='Enter') saveEdit(); });
 
