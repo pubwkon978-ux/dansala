@@ -208,6 +208,14 @@
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--maroon);color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="බත් දන්සල">
+<meta name="theme-color" content="#7B1C2E">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -235,7 +243,7 @@
   <!-- GRAND TOTAL CARD -->
   <div class="grand-total-wrap">
     <div class="grand-total-card">
-      <div class="gt-label">සම්පූර්ණ  මුදල</div>
+      <div class="gt-label">සම්පූර්ණ ඉලක්ක මුදල</div>
       <div class="gt-amount-wrap">
         <span class="gt-currency">රු.</span>
         <span class="gt-amount" id="grand-total">0.00</span>
