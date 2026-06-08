@@ -1,0 +1,14 @@
+{
+  "name": "පොසොන් මහා බත් දන්සල",
+  "short_name": "බත් දන්සල",
+  "description": "දන්සල සඳහා දායකත්ව වාර්තාව",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#7B1C2E",
+  "theme_color": "#7B1C2E",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
