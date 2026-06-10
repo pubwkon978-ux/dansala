@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — දන්සල</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="දන්සල Admin">
+<meta name="theme-color" content="#7B1C2E">
+<link rel="apple-touch-icon" href="icon2.png">
+<link rel="icon" type="image/png" href="icon2.png">
+<link rel="manifest" href="manifest-admin.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C8860A;--gold-light:#F5D98B;--gold-bg:#FDF6E3;
+  --saffron:#E8851A;--saffron-dark:#B35C00;--maroon:#7B1C2E;
+  --cream:#FFF9EE;--text:#2C1A0E;--text-muted:#7A5C3A;
+  --border:#E5C97A;--success:#2E7D32;--success-bg:#E8F5E9;
+  --danger:#c62828;--danger-bg:#FFEBEE;
+  --radius:12px;--shadow:0 2px 12px rgba(200,134,10,0.12);
+}
+body{font-family:'Noto Sans Sinhala',sans-serif;background:var(--gold-bg);color:var(--text);min-height:100vh;padding-bottom:3rem}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:white;border-radius:20px;padding:2rem 1.5rem;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(123,28,46,.18);border:1.5px solid var(--border)}
+.login-logo{font-size:2.5rem;margin-bottom:.75rem}
+.login-title{font-family:'Noto Serif Sinhala',serif;font-size:1.1rem;font-weight:700;color:var(--maroon);margin-bottom:.3rem}
+.login-sub{font-size:.8rem;color:var(--text-muted);margin-bottom:1.5rem}
+.pwd-input{width:100%;padding:.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:1.3rem;text-align:center;letter-spacing:.4rem;outline:none;-webkit-appearance:none;font-family:monospace;background:var(--cream);margin-bottom:.5rem}
+.pwd-input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+.pwd-err{font-size:.8rem;color:var(--danger);margin-bottom:.75rem;display:none}
+.btn-login{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--maroon),#4A0E1A);color:var(--gold-light);border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.btn-login:active{opacity:.85}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--maroon) 0%,#4A0E1A 50%,var(--maroon) 100%);padding:1.25rem 1rem 1rem;text-align:center;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C8860A' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");opacity:.5}
+.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:.75rem}
+.header-title{font-family:'Noto Serif Sinhala',serif;font-size:1rem;font-weight:700;color:var(--gold-light)}
+.btn-logout{background:rgba(245,217,139,.12);border:1px solid rgba(245,217,139,.3);border-radius:8px;color:var(--gold-light);font-size:.75rem;padding:.35rem .75rem;cursor:pointer;font-family:'Noto Sans Sinhala',sans-serif;-webkit-tap-highlight-color:transparent}
+.year-tabs{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;position:relative}
+.year-btn{padding:.4rem 1rem;border-radius:50px;border:1.5px solid rgba(245,217,139,.35);background:rgba(245,217,139,.08);color:var(--gold-light);font-family:'Noto Sans Sinhala',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative}
+.year-btn.active{background:var(--gold-light);color:var(--maroon);border-color:var(--gold-light)}
+.req-dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#ef5350;border:2px solid var(--maroon);display:none}
+.req-dot.show{display:block}
+
+#status-bar{display:flex;align-items:center;justify-content:center;gap:6px;padding:.35rem 1rem;font-size:.72rem;background:#555;color:#ddd}
+#status-bar.online{background:#1B5E20;color:#C8E6C9}
+#status-bar.error{background:#7f1d1d;color:#fecaca}
+#status-bar.syncing{background:#78350f;color:#fde68a}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;display:inline-block}
+.syncing .sync-dot{animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.main{padding:1rem;max-width:680px;margin:0 auto}
+.card{background:white;border-radius:var(--radius);border:1.5px solid var(--border);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden}
+.card-header{padding:.85rem 1rem;background:var(--gold-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.card-title{font-family:'Noto Serif Sinhala',serif;font-size:.88rem;font-weight:700;color:var(--maroon);display:flex;align-items:center;gap:.5rem}
+.badge{background:var(--maroon);color:var(--gold-light);font-size:.7rem;padding:.15rem .55rem;border-radius:20px;font-weight:700}
+.badge.green{background:var(--success)}
+.badge.red{background:var(--danger)}
+.card-body{padding:1rem}
+
+/* Grand Total Card (same style as user page) */
+.grand-total-wrap{margin-bottom:.85rem;display:flex;justify-content:center}
+.grand-total-card{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon) 0%,#6B1428 45%,#3A0A10 100%);border-radius:16px;padding:1.1rem 1.5rem 1rem;border:1.5px solid rgba(245,217,139,.25);box-shadow:0 6px 28px rgba(123,28,46,.35),0 2px 8px rgba(200,134,10,.18),inset 0 1px 0 rgba(245,217,139,.15);text-align:center;width:100%;max-width:420px}
+.grand-total-card::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(245,217,139,.10),transparent);animation:shimmer 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes shimmer{0%{left:-100%}60%,100%{left:160%}}
+.grand-total-card::after{content:'🪷';position:absolute;right:1rem;top:.6rem;font-size:1.1rem;opacity:.22;pointer-events:none;animation:floatLotus 4s ease-in-out infinite}
+@keyframes floatLotus{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-4px) rotate(5deg)}}
+.gt-label{font-size:.68rem;font-weight:600;letter-spacing:.12rem;text-transform:uppercase;color:rgba(245,217,139,.65);margin-bottom:.4rem}
+.gt-amount-wrap{display:flex;align-items:baseline;justify-content:center;gap:.3rem}
+.gt-currency{font-size:.9rem;font-weight:600;color:var(--gold-light);opacity:.85}
+.gt-amount{font-size:clamp(1.7rem,7vw,2.2rem);font-weight:700;color:var(--gold-light);text-shadow:0 2px 12px rgba(200,134,10,.4);font-family:'Noto Serif Sinhala',serif;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.gt-amount.bump{transform:scale(1.08)}
+
+/* Two cards row */
+.totals-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.t-card{background:white;border-radius:var(--radius);padding:.9rem 1rem;border:1.5px solid var(--border);text-align:center;box-shadow:var(--shadow)}
+.t-card.paid{border-color:#A5D6A7}
+.t-lbl{font-size:.68rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07rem;margin-bottom:.25rem}
+.t-card.paid .t-lbl{color:var(--success)}
+.t-val{font-size:1.2rem;font-weight:700;color:var(--saffron-dark)}
+.t-card.paid .t-val{color:var(--success)}
+.t-currency{font-size:.72rem;font-weight:500}
+
+/* Festival Selector */
+.festival-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.festival-btn{padding:.5rem 1.1rem;border-radius:50px;border:1.5px solid var(--border);background:white;color:var(--text-muted);font-family:'Noto Sans Sinhala',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.festival-btn:active{transform:scale(.95)}
+.festival-btn.active{background:var(--maroon);color:var(--gold-light);border-color:var(--maroon);box-shadow:0 2px 8px rgba(123,28,46,.3)}
+.festival-hint{font-size:.75rem;color:var(--text-muted);margin-top:.6rem}
+
+/* Request list */
+.req-item{border:1.5px solid #FFD54F;border-radius:10px;padding:.85rem;margin-bottom:.65rem;background:#FFFDE7}
+.req-item:last-child{margin-bottom:0}
+.req-name{font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:.2rem}
+.req-amt{font-size:.85rem;color:var(--saffron-dark);font-family:monospace;font-weight:600}
+.req-time{font-size:.7rem;color:var(--text-muted);margin-top:.15rem}
+.req-actions{display:flex;gap:.5rem;margin-top:.65rem}
+.btn-approve{flex:1;padding:.6rem;background:var(--success);color:white;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn-reject{flex:1;padding:.6rem;background:white;color:var(--danger);border:1.5px solid var(--danger);border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn-approve:active,.btn-reject:active{opacity:.82}
+.empty-req{text-align:center;padding:1.5rem;color:var(--text-muted);font-size:.85rem}
+
+/* Search */
+.search-inp{width:100%;padding:.6rem .9rem .6rem 2.1rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.88rem;color:var(--text);background:var(--cream);outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A5C3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.6rem center;margin-bottom:.75rem}
+.search-inp:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+
+/* Entries table — NO action column */
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+thead tr{background:var(--gold-bg);border-bottom:2px solid var(--border)}
+th{padding:.65rem .75rem;text-align:left;font-size:.7rem;font-weight:700;color:var(--saffron-dark);text-transform:uppercase;letter-spacing:.05rem;white-space:nowrap}
+th.c,td.c{text-align:center}
+td{padding:.72rem .75rem;border-bottom:1px solid rgba(229,201,122,.3);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.paid-row{background:var(--success-bg)}
+tr.paid-row td{color:#2E7D32}
+.name-cell{font-weight:600;user-select:none;-webkit-user-select:none;cursor:default}
+.name-cell.pressing{background:rgba(200,134,10,.08);border-radius:4px}
+.amt{font-weight:500;font-family:monospace;font-size:.9rem;color:var(--saffron-dark)}
+tr.paid-row .amt{color:#2E7D32}
+.check-label{width:26px;height:26px;border-radius:6px;border:2px solid var(--border);background:white;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;font-size:0;line-height:1}
+.check-label.is-checked{background:var(--success);border-color:var(--success);font-size:15px;color:white;font-weight:700}
+.highlight{background:#FFF176;border-radius:2px;padding:0 1px}
+.empty-entries{text-align:center;padding:2rem;color:var(--text-muted);font-size:.85rem}
+
+/* Context menu */
+.ctx-menu{position:fixed;background:white;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22),0 2px 8px rgba(200,134,10,.15);border:1.5px solid var(--border);overflow:hidden;z-index:2000;min-width:200px;animation:popIn .18s cubic-bezier(.34,1.56,.64,1);transform-origin:top left}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.ctx-name{padding:.75rem 1rem .5rem;font-family:'Noto Serif Sinhala',serif;font-size:.82rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
+.ctx-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;font-size:.88rem;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(229,201,122,.2);transition:background .12s}
+.ctx-item:last-child{border-bottom:none}
+.ctx-item:active{background:var(--gold-bg)}
+.ctx-item .ctx-icon{font-size:1.1rem;flex-shrink:0}
+.ctx-item.danger{color:var(--danger)}
+.ctx-backdrop{position:fixed;inset:0;z-index:1999}
+
+/* Modals */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.modal-icon{font-size:2rem;margin-bottom:.75rem}
+.modal-title{font-family:'Noto Serif Sinhala',serif;font-size:.95rem;color:var(--text);margin-bottom:.75rem;font-weight:600}
+.modal-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5}
+.edit-fields{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1rem;text-align:left}
+.edit-fields label{font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05rem;display:block;margin-bottom:.25rem}
+.edit-fields input[type="text"]{width:100%;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.92rem;color:var(--text);background:var(--cream);outline:none;-webkit-appearance:none}
+.edit-fields input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+.btn-row{display:flex;gap:.75rem}
+.btn-no{flex:1;padding:.7rem;border:1.5px solid var(--border);border-radius:8px;background:white;font-family:'Noto Sans Sinhala',sans-serif;font-size:.88rem;cursor:pointer;color:var(--text-muted)}
+.btn-yes{flex:1;padding:.7rem;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.88rem;cursor:pointer;color:white;font-weight:600;background:var(--success)}
+.btn-yes.red{background:var(--danger)}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--maroon);color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">🔐</div>
+    <div class="login-title">Admin පිවිසුම</div>
+    <div class="login-sub">දන්සල කළමනාකරණය</div>
+    <input type="password" class="pwd-input" id="login-pwd" placeholder="••••" maxlength="10" autocomplete="off">
+    <div class="pwd-err" id="login-err">⚠ වැරදි මුරපදයකි</div>
+    <button class="btn-login" id="btn-login" type="button">පිවිසෙන්න →</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none">
+  <div class="header">
+    <div class="header-top">
+      <div class="header-title">⚙️ Admin Dashboard</div>
+      <button class="btn-logout" id="btn-logout" type="button">ඉවත්වෙන්න</button>
+    </div>
+    <div class="year-tabs" id="year-tabs"></div>
+  </div>
+  <div id="status-bar"><span class="sync-dot"></span><span id="status-text">සම්බන්ධ වෙමින්...</span></div>
+
+  <div class="main">
+
+    <!-- FESTIVAL CONFIG -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🪷 <span id="fest-card-title">දන්සල වර්ගය</span></div>
+      </div>
+      <div class="card-body">
+        <div class="festival-row">
+          <button class="festival-btn" data-key="vesak" type="button">🌕 වෙසක්</button>
+          <button class="festival-btn" data-key="poson" type="button">🪷 පොසොන්</button>
+          <button class="festival-btn" data-key="esala" type="button">☸️ ඇසල</button>
+        </div>
+        <div class="festival-hint">දැනට: <b id="fest-current">සකස් කර නොමැත</b></div>
+      </div>
+    </div>
+
+    <!-- PENDING REQUESTS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📬 ලැබී ඇති ඉල්ලීම් <span class="badge red" id="req-badge" style="display:none">0</span></div>
+      </div>
+      <div class="card-body" id="req-list">
+        <div class="empty-req">📭 ඉල්ලීම් නොමැත</div>
+      </div>
+    </div>
+
+    <!-- GRAND TOTAL (centered, above two cards) -->
+    <div class="grand-total-wrap">
+      <div class="grand-total-card">
+        <div class="gt-label">සම්පූර්ණ මුදල</div>
+        <div class="gt-amount-wrap">
+          <span class="gt-currency">රු.</span>
+          <span class="gt-amount" id="grand-total">0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWO CARDS -->
+    <div class="totals-row">
+      <div class="t-card">
+        <div class="t-lbl">ලැබීමට නියමිත</div>
+        <div class="t-val"><span class="t-currency">රු. </span><span id="t-pending">0.00</span></div>
+      </div>
+      <div class="t-card paid">
+        <div class="t-lbl">ලැබී ඇති</div>
+        <div class="t-val"><span class="t-currency">රු. </span><span id="t-paid">0.00</span></div>
+      </div>
+    </div>
+
+    <!-- ENTRIES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📋 <span id="entries-title">දායකයන් ලැයිස්තුව</span></div>
+        <span class="badge" id="entries-badge">0</span>
+      </div>
+      <div class="card-body">
+        <input type="text" class="search-inp" id="search-inp" placeholder="නම සොයන්න..." autocomplete="off" autocorrect="off" spellcheck="false">
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>නම <span style="font-size:.65rem;color:var(--text-muted);font-weight:400">(long press = edit/delete)</span></th><th class="c">මුදල</th><th class="c">ලැබී ✓</th></tr></thead>
+            <tbody id="entries-tbody"><tr><td colspan="3"><div class="empty-entries">🪷 දායකයන් නොමැත</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="ctx-backdrop" id="ctx-backdrop" style="display:none"></div>
+<div class="ctx-menu" id="ctx-menu" style="display:none">
+  <div class="ctx-name" id="ctx-name-label"></div>
+  <div class="ctx-item" id="ctx-edit"><span class="ctx-icon">✏️</span><span>සංස්කරණය කරන්න</span></div>
+  <div class="ctx-item danger" id="ctx-del"><span class="ctx-icon">🗑</span><span>ඉවත් කරන්න</span></div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-icon">✏️</div>
+    <div class="modal-title">සංස්කරණය කරන්න</div>
+    <div class="edit-fields">
+      <div><label for="edit-name">නම</label><input type="text" id="edit-name" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+      <div><label for="edit-amount">මුදල (රු.)</label><input type="text" id="edit-amount" inputmode="decimal" autocomplete="off"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-no" id="edit-cancel" type="button">අවලංගු</button>
+      <button class="btn-yes" id="edit-ok" type="button">✦ සුරකින්න</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="overlay" id="del-modal">
+  <div class="modal">
+    <div class="modal-icon">🗑</div>
+    <div class="modal-title">ඉවත් කරන්නද?</div>
+    <div class="modal-sub" id="del-sub"></div>
+    <div class="btn-row">
+      <button class="btn-no" id="del-no" type="button">නැත</button>
+      <button class="btn-yes red" id="del-yes" type="button">ඔව්, ඉවත් කරන්න</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+var FIREBASE_CONFIG={apiKey:"AIzaSyBQeS1y9v033LXFkw2vfZZVTM416bLrgKY",authDomain:"dansala-95329.firebaseapp.com",databaseURL:"https://dansala-95329-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"dansala-95329",storageBucket:"dansala-95329.firebasestorage.app",messagingSenderId:"383448639689",appId:"1:383448639689:web:ad1fe1250a115ddb5e0518"};
+var ADMIN_PWD='1157';
+var FESTIVAL_LABELS={vesak:'වෙසක්',poson:'පොසොන්',esala:'ඇසල'};
+var START_YEAR=2025;
+// Year range: show only up to CURRENT_YEAR (Jan 1 of next year it auto-adds)
+var CURRENT_YEAR=new Date().getFullYear();
+var END_YEAR=CURRENT_YEAR; // only current year and past
+
+var activeYear=CURRENT_YEAR,entries=[],requests=[],db=null,entriesRef=null,reqRef=null,ready=false,searchQ='',toastTmr=null,gtBumpTimer=null;
+var pendingEdit=null,pendingDel=null,ctxId=null;
+var festivalByYear={},reqCountByYear={};
+
+// ── LOGIN ─────────────────────────────────
+document.getElementById('btn-login').addEventListener('click',tryLogin);
+document.getElementById('login-pwd').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin();document.getElementById('login-err').style.display='none';});
+function tryLogin(){
+  if(document.getElementById('login-pwd').value===ADMIN_PWD){
+    document.getElementById('login-wrap').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    initFB();
+  }else{
+    document.getElementById('login-err').style.display='block';
+    document.getElementById('login-pwd').value='';
+    document.getElementById('login-pwd').focus();
+  }
+}
+document.getElementById('btn-logout').addEventListener('click',function(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('login-wrap').style.display='flex';
+  document.getElementById('login-pwd').value='';
+  document.getElementById('login-err').style.display='none';
+  try{if(entriesRef)entriesRef.off();if(reqRef)reqRef.off();if(db)db.ref('dansala/config').off();if(db)db.ref('dansala').off();}catch(e){}
+});
+
+// ── FIREBASE ──────────────────────────────
+function initFB(){
+  try{if(firebase.apps.length){firebase.app().delete().then(doConnect).catch(doConnect);}else{doConnect();}}catch(e){doConnect();}
+}
+function doConnect(){
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db=firebase.database();
+    db.ref('dansala/config').on('value',function(snap){
+      festivalByYear={};
+      snap.forEach(function(c){var v=c.val();if(v&&v.festival)festivalByYear[parseInt(c.key,10)]=v.festival;});
+      updateFestivalUI();
+    });
+    db.ref('dansala').on('value',function(snap){
+      reqCountByYear={};
+      snap.forEach(function(yearSnap){
+        var yr=parseInt(yearSnap.key,10);if(isNaN(yr))return;
+        var cnt=0;yearSnap.child('requests').forEach(function(r){if(r.val()&&r.val().status==='pending')cnt++;});
+        reqCountByYear[yr]=cnt;
+      });
+      updateYearBadges();
+    });
+    buildYearTabs();subscribeYear();
+  }catch(e){setStatus('error','Error: '+e.message);}
+}
+
+// ── YEAR TABS ─────────────────────────────
+function buildYearTabs(){
+  // Recalculate in case midnight passed
+  CURRENT_YEAR=new Date().getFullYear();
+  END_YEAR=CURRENT_YEAR;
+  var wrap=document.getElementById('year-tabs');wrap.innerHTML='';
+  for(var y=START_YEAR;y<=END_YEAR;y++){(function(yr){
+    var btn=document.createElement('button');
+    btn.className='year-btn'+(yr===activeYear?' active':'');
+    btn.type='button';
+    var dot=document.createElement('span');dot.className='req-dot';dot.id='ydot-'+yr;
+    btn.appendChild(document.createTextNode(yr));
+    btn.appendChild(dot);
+    btn.addEventListener('click',function(){switchYear(yr);});
+    wrap.appendChild(btn);
+  })(y);}
+  document.getElementById('fest-card-title').textContent=activeYear+' — දන්සල වර්ගය';
+  document.getElementById('entries-title').textContent=activeYear+' දායකයන් ලැයිස්තුව';
+}
+
+function updateYearBadges(){
+  for(var y=START_YEAR;y<=END_YEAR;y++){
+    var dot=document.getElementById('ydot-'+y);
+    if(dot)dot.className='req-dot'+((reqCountByYear[y]>0)?' show':'');
+  }
+}
+
+function switchYear(yr){
+  if(yr===activeYear)return;
+  activeYear=yr;searchQ='';
+  document.getElementById('search-inp').value='';
+  buildYearTabs();updateFestivalUI();subscribeYear();
+}
+
+// ── SUBSCRIBE ─────────────────────────────
+function subscribeYear(){
+  if(entriesRef)entriesRef.off();if(reqRef)reqRef.off();
+  entries=[];requests=[];ready=false;renderEntries();renderRequests();
+  setStatus('syncing','සම්බන්ධ වෙමින්...');
+  entriesRef=db.ref('dansala/'+activeYear+'/entries');
+  entriesRef.on('value',function(snap){
+    entries=[];snap.forEach(function(c){entries.push(c.val());});
+    entries.sort(function(a,b){return a.id-b.id;});
+    ready=true;setStatus('online','Admin · '+activeYear);renderEntries();
+  },function(err){setStatus('error','Firebase Error: '+err.code);});
+  reqRef=db.ref('dansala/'+activeYear+'/requests');
+  reqRef.on('value',function(snap){
+    requests=[];
+    snap.forEach(function(c){if(c.val()&&c.val().status==='pending')requests.push(c.val());});
+    requests.sort(function(a,b){return a.timestamp-b.timestamp;});
+    renderRequests();
+  });
+}
+
+function setStatus(cls,msg){document.getElementById('status-bar').className=cls;document.getElementById('status-text').textContent=msg;}
+
+// ── FESTIVAL ──────────────────────────────
+function updateFestivalUI(){
+  var cur=festivalByYear[activeYear];
+  document.getElementById('fest-current').textContent=cur?FESTIVAL_LABELS[cur]:'සකස් කර නොමැත';
+  document.querySelectorAll('.festival-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-key')===cur);});
+}
+document.querySelectorAll('.festival-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    if(!db)return;
+    var key=btn.getAttribute('data-key');
+    db.ref('dansala/config/'+activeYear).set({festival:key},function(err){
+      if(!err)showToast('✔ '+activeYear+' — '+FESTIVAL_LABELS[key]+' ලෙස සකස් කරන ලදී');
+      else showToast('⚠ '+err.message);
+    });
+  });
+});
+
+// ── REQUESTS ──────────────────────────────
+function renderRequests(){
+  var cnt=requests.length;
+  var badge=document.getElementById('req-badge');
+  badge.textContent=cnt;badge.style.display=cnt?'inline':'none';
+  var list=document.getElementById('req-list');
+  if(!cnt){list.innerHTML='<div class="empty-req">📭 ඉල්ලීම් නොමැත</div>';return;}
+  var h='';
+  for(var i=0;i<requests.length;i++){
+    var r=requests[i];
+    var d=new Date(r.timestamp);
+    var ds=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+    h+='<div class="req-item"><div class="req-name">'+esc(r.name)+'</div>';
+    h+='<div class="req-amt">රු. '+fmt(r.pending)+'</div>';
+    h+='<div class="req-time">'+ds+'</div>';
+    h+='<div class="req-actions"><button class="btn-approve" data-rid="'+r.id+'" type="button">✔ අනුමත කරන්න</button>';
+    h+='<button class="btn-reject" data-rid="'+r.id+'" type="button">✕ ප්‍රතික්ෂේප</button></div></div>';
+  }
+  list.innerHTML=h;
+  list.querySelectorAll('.btn-approve').forEach(function(b){b.addEventListener('click',function(){approveRequest(parseInt(b.getAttribute('data-rid'),10));});});
+  list.querySelectorAll('.btn-reject').forEach(function(b){b.addEventListener('click',function(){rejectRequest(parseInt(b.getAttribute('data-rid'),10));});});
+}
+
+function approveRequest(id){
+  var r=null;for(var i=0;i<requests.length;i++){if(requests[i].id===id){r=requests[i];break;}}
+  if(!r)return;
+  var batch={};
+  batch['dansala/'+activeYear+'/entries/'+id]={id:id,name:r.name,pending:r.pending,paid:false};
+  batch['dansala/'+activeYear+'/requests/'+id+'/status']='approved';
+  db.ref().update(batch,function(err){
+    if(!err)showToast('✔ "'+r.name+'" ලැයිස්තුවට එකතු කරන ලදී');
+    else showToast('⚠ '+err.message);
+  });
+}
+function rejectRequest(id){
+  var r=null;for(var i=0;i<requests.length;i++){if(requests[i].id===id){r=requests[i];break;}}
+  if(!r)return;
+  db.ref('dansala/'+activeYear+'/requests/'+id+'/status').set('rejected',function(err){
+    if(!err)showToast('🗑 "'+r.name+'" ඉල්ලීම ප්‍රතික්ෂේප කරන ලදී');
+  });
+}
+
+// ── ENTRIES RENDER ─────────────────────────
+function fmt(n){var x=(parseFloat(n)||0).toFixed(2).split('.');x[0]=x[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');return x.join('.');}
+function escRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function getEntry(id){for(var i=0;i<entries.length;i++){if(entries[i].id===id)return entries[i];}return null;}
+
+function bumpGT(){
+  var el=document.getElementById('grand-total');
+  el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
+  clearTimeout(gtBumpTimer);gtBumpTimer=setTimeout(function(){el.classList.remove('bump');},300);
+}
+
+function renderEntries(){
+  var tp=0,tpd=0;
+  for(var i=0;i<entries.length;i++){if(entries[i].paid)tpd+=entries[i].pending;else tp+=entries[i].pending;}
+  var gt=tp+tpd;
+  var gtEl=document.getElementById('grand-total'),ngt=fmt(gt);
+  if(gtEl.textContent!==ngt){gtEl.textContent=ngt;bumpGT();}
+  document.getElementById('t-pending').textContent=fmt(tp);
+  document.getElementById('t-paid').textContent=fmt(tpd);
+  document.getElementById('entries-badge').textContent=entries.length;
+  var tbody=document.getElementById('entries-tbody');
+  if(!entries.length){tbody.innerHTML='<tr><td colspan="3"><div class="empty-entries">🪷 දායකයන් නොමැත</div></td></tr>';return;}
+  var q=searchQ.toLowerCase().replace(/^\s+|\s+$/g,'');
+  var filtered=q?entries.filter(function(e){return e.name.toLowerCase().indexOf(q)!==-1;}):entries;
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:1rem;color:var(--text-muted)">🔍 "'+esc(searchQ)+'" — ප්‍රතිඵල නොමැත</td></tr>';return;}
+  var h='';
+  for(var j=0;j<filtered.length;j++){
+    var e=filtered[j];
+    var dn=q?e.name.replace(new RegExp('('+escRe(q)+')','gi'),'<mark class="highlight">$1</mark>'):esc(e.name);
+    h+='<tr class="'+(e.paid?'paid-row':'')+'">';
+    h+='<td class="name-cell longpress-cell" data-id="'+e.id+'">'+dn+'</td>';
+    h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
+    h+='<td class="c"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></td>';
+    h+='</tr>';
+  }
+  tbody.innerHTML=h;
+
+  // Checkbox toggle
+  tbody.querySelectorAll('.cb-btn').forEach(function(el){
+    el.addEventListener('click',function(){
+      var id=parseInt(el.getAttribute('data-id'),10);
+      var entry=getEntry(id);if(!entry||!ready)return;
+      setStatus('syncing','සමමුහුර්ත...');
+      entriesRef.child(String(id)).update({paid:!entry.paid});
+    });
+  });
+
+  // Long press on name → context menu
+  tbody.querySelectorAll('.longpress-cell').forEach(function(el){
+    var tid=parseInt(el.getAttribute('data-id'),10);
+    var lpt=null,startX=0,startY=0,moved=false;
+    el.addEventListener('touchstart',function(ev){
+      moved=false;startX=ev.touches[0].clientX;startY=ev.touches[0].clientY;
+      el.classList.add('pressing');
+      lpt=setTimeout(function(){
+        if(!moved){el.classList.remove('pressing');if(navigator.vibrate)navigator.vibrate(40);showCtx(tid,startX,startY);}
+      },500);
+    },{passive:true});
+    el.addEventListener('touchmove',function(ev){
+      var dx=ev.touches[0].clientX-startX,dy=ev.touches[0].clientY-startY;
+      if(Math.sqrt(dx*dx+dy*dy)>8){moved=true;el.classList.remove('pressing');clearTimeout(lpt);}
+    },{passive:true});
+    el.addEventListener('touchend',function(){el.classList.remove('pressing');clearTimeout(lpt);});
+    el.addEventListener('touchcancel',function(){el.classList.remove('pressing');clearTimeout(lpt);});
+    el.addEventListener('contextmenu',function(ev){ev.preventDefault();showCtx(tid,ev.clientX,ev.clientY);});
+  });
+}
+
+// ── CONTEXT MENU ──────────────────────────
+function showCtx(id,x,y){
+  ctxId=id;
+  var e=getEntry(id);if(!e)return;
+  document.getElementById('ctx-name-label').textContent=e.name;
+  var menu=document.getElementById('ctx-menu');
+  menu.style.display='block';
+  document.getElementById('ctx-backdrop').style.display='block';
+  var vw=window.innerWidth,vh=window.innerHeight,mw=210,mh=130;
+  var left=Math.min(x,vw-mw-12),top=Math.min(y,vh-mh-12);
+  if(top<12)top=12;if(left<12)left=12;
+  menu.style.left=left+'px';menu.style.top=top+'px';
+}
+function hideCtx(){document.getElementById('ctx-menu').style.display='none';document.getElementById('ctx-backdrop').style.display='none';ctxId=null;}
+document.getElementById('ctx-backdrop').addEventListener('touchstart',function(e){e.preventDefault();hideCtx();},{passive:false});
+document.getElementById('ctx-backdrop').addEventListener('click',hideCtx);
+document.getElementById('ctx-edit').addEventListener('click',function(){var id=ctxId;hideCtx();openEdit(id);});
+document.getElementById('ctx-del').addEventListener('click',function(){var id=ctxId;hideCtx();openDel(id);});
+
+// ── EDIT ──────────────────────────────────
+function openEdit(id){
+  var e=getEntry(id);if(!e)return;
+  pendingEdit=id;
+  document.getElementById('edit-name').value=e.name;
+  document.getElementById('edit-amount').value=e.pending;
+  document.getElementById('edit-modal').style.display='flex';
+  setTimeout(function(){document.getElementById('edit-name').focus();},150);
+}
+function saveEdit(){
+  var n=document.getElementById('edit-name').value.replace(/^\s+|\s+$/g,'');
+  var a=parseFloat(document.getElementById('edit-amount').value.replace(/,/g,'').replace(/^\s+|\s+$/g,''));
+  if(!n){showToast('⚠ නම ඇතුළත් කරන්න');return;}
+  if(!a||isNaN(a)||a<=0){showToast('⚠ නිවැරදි මුදලක් ඇතුළත් කරන්න');return;}
+  document.getElementById('edit-modal').style.display='none';
+  if(!ready||!pendingEdit)return;
+  setStatus('syncing','සමමුහුර්ත...');
+  entriesRef.child(String(pendingEdit)).update({name:n,pending:a},function(err){
+    if(!err)showToast('✔ යාවත්කාලීන කරන ලදී');else showToast('⚠ '+err.message);
+  });
+  pendingEdit=null;
+}
+document.getElementById('edit-ok').addEventListener('click',saveEdit);
+document.getElementById('edit-cancel').addEventListener('click',function(){document.getElementById('edit-modal').style.display='none';pendingEdit=null;});
+document.getElementById('edit-name').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('edit-amount').focus();});
+document.getElementById('edit-amount').addEventListener('keydown',function(e){if(e.key==='Enter')saveEdit();});
+
+// ── DELETE ────────────────────────────────
+function openDel(id){
+  var e=getEntry(id);if(!e)return;
+  pendingDel=id;
+  document.getElementById('del-sub').textContent='"'+e.name+'" ඉවත් කිරීමට අවශ්‍ය ද?';
+  document.getElementById('del-modal').style.display='flex';
+}
+document.getElementById('del-yes').addEventListener('click',function(){
+  document.getElementById('del-modal').style.display='none';
+  if(pendingDel&&ready){
+    setStatus('syncing','සමමුහුර්ත...');
+    entriesRef.child(String(pendingDel)).remove(function(){showToast('🗑 ඉවත් කරන ලදී');});
+  }
+  pendingDel=null;
+});
+document.getElementById('del-no').addEventListener('click',function(){document.getElementById('del-modal').style.display='none';pendingDel=null;});
+
+// ── UTILS ─────────────────────────────────
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTmr);toastTmr=setTimeout(function(){t.classList.remove('show');},2500);}
+document.getElementById('search-inp').addEventListener('input',function(){searchQ=this.value;renderEntries();});
+
+// Rebuild year tabs at midnight (new year)
+function scheduleYearCheck(){
+  var now=new Date(),midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,5);
+  var ms=midnight-now;
+  setTimeout(function(){CURRENT_YEAR=new Date().getFullYear();END_YEAR=CURRENT_YEAR;buildYearTabs();scheduleYearCheck();},ms);
+}
+scheduleYearCheck();
+</script>
+</body>
+</html>
