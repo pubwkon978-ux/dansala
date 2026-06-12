@@ -1,14 +1,23 @@
 {
-  "name": "පොසොන් මහා බත් දන්සල",
-  "short_name": "බත් දන්සල",
-  "description": "දන්සල සඳහා දායකත්ව වාර්තාව",
-  "start_url": ".",
+  "name": "දන්සල Admin",
+  "short_name": "Admin",
+  "description": "දන්සල කළමනාකරණය",
+  "start_url": "admin.html",
   "display": "standalone",
   "background_color": "#7B1C2E",
   "theme_color": "#7B1C2E",
   "orientation": "portrait",
   "icons": [
-    { "src": "icon2.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon2.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
