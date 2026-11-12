@@ -532,10 +532,16 @@ function renderCountdown(){
 setInterval(renderCountdown,1000);
 
 // ── YEAR TABS ─────────────────────────────
+// next year's tab appears only after admin sets a date for it
+function maxYear(){
+  var c=configByYear[CURRENT_YEAR+1];
+  return (c && parseDate(c.date)) ? CURRENT_YEAR+1 : CURRENT_YEAR;
+}
+
 function buildYearTabs(){
   var wrap = document.getElementById('year-tabs');
   wrap.innerHTML = '';
-  for(var y = START_YEAR; y <= CURRENT_YEAR; y++){
+  for(var y = START_YEAR; y <= maxYear(); y++){
     (function(yr){
       var btn = document.createElement('button');
       btn.className = 'year-btn' + (yr === activeYear ? ' active' : '');
@@ -578,8 +584,8 @@ function doConnect(){
       configByYear = {};
       snap.forEach(function(c){ configByYear[parseInt(c.key,10)] = c.val() || {}; });
       cfgLoaded = true;
-      applyFestival();
-      renderCountdown();
+      if(activeYear > maxYear()){ activeYear = CURRENT_YEAR; buildYearTabs(); subscribeYear(); }
+      else { buildYearTabs(); }
     });
     subscribeYear();
   } catch(e){ setStatus('error','Error: '+e.message); }
