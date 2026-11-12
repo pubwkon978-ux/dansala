@@ -355,7 +355,7 @@ var MONTHS=['ජනවාරි','පෙබරවාරි','මාර්තු'
 var START_YEAR=2025;
 // Year range: show only up to CURRENT_YEAR (Jan 1 of next year it auto-adds)
 var CURRENT_YEAR=new Date().getFullYear();
-var END_YEAR=CURRENT_YEAR; // only current year and past
+var END_YEAR=CURRENT_YEAR+1; // current year + next year (always visible)
 
 var activeYear=CURRENT_YEAR,entries=[],expenses=[],db=null,entriesRef=null,expRef=null,ready=false,searchQ='',toastTmr=null,gtBumpTimer=null;
 var pendingEdit=null,pendingDel=null,ctxId=null,editKind='entry',delKind='entry';
@@ -404,7 +404,7 @@ function doConnect(){
 function buildYearTabs(){
   // Recalculate in case midnight passed
   CURRENT_YEAR=new Date().getFullYear();
-  END_YEAR=CURRENT_YEAR;
+  END_YEAR=CURRENT_YEAR+1;
   var wrap=document.getElementById('year-tabs');wrap.innerHTML='';
   for(var y=START_YEAR;y<=END_YEAR;y++){(function(yr){
     var btn=document.createElement('button');
@@ -707,7 +707,7 @@ document.getElementById('search-inp').addEventListener('input',function(){search
 function scheduleYearCheck(){
   var now=new Date(),midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,5);
   var ms=midnight-now;
-  setTimeout(function(){CURRENT_YEAR=new Date().getFullYear();END_YEAR=CURRENT_YEAR;buildYearTabs();scheduleYearCheck();},ms);
+  setTimeout(function(){CURRENT_YEAR=new Date().getFullYear();END_YEAR=CURRENT_YEAR+1;buildYearTabs();scheduleYearCheck();},ms);
 }
 scheduleYearCheck();
 </script>
