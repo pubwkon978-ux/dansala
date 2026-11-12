@@ -2,226 +2,239 @@
 <html lang="si">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>පොසොන් මහා බත් දන්සල</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>මහා බත් දන්සල</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
     --gold:#C8860A;--gold-light:#F5D98B;--gold-bg:#FDF6E3;
-    --saffron:#E8851A;--saffron-dark:#B35C00;--maroon:#7B1C2E;
-    --cream:#FFF9EE;--text:#2C1A0E;--text-muted:#7A5C3A;
+    --saffron:#E8851A;--saffron-dark:#B35C00;--maroon:#7B1C2E;--maroon-deep:#4A0E1A;
+    --cream:#FFF9EE;--text:#2C1A0E;--text-muted:#6B4C2E;
     --border:#E5C97A;--success:#2E7D32;--success-bg:#E8F5E9;
-    --radius:12px;--shadow:0 2px 12px rgba(200,134,10,0.12);
+    --glass-fill:rgba(255,255,255,.26);
+    --glass-fill-strong:rgba(255,255,255,.46);
+    --glass-edge:rgba(255,255,255,.62);
+    --glass-sheen:linear-gradient(135deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.10) 38%,rgba(255,255,255,.04) 62%,rgba(255,255,255,.30) 100%);
+    --glass-shadow:0 10px 34px rgba(123,28,46,.16),0 2px 6px rgba(123,28,46,.08),inset 1px 1px 0 rgba(255,255,255,.9),inset -1px -1px 0 rgba(255,255,255,.35);
+    --blur:blur(22px) saturate(180%);
   }
-  body{font-family:'Noto Sans Sinhala',sans-serif;background:var(--gold-bg);color:var(--text);min-height:100vh;padding-bottom:3rem}
+  html{background:#f3d3a0}
+  body{font-family:'Noto Sans Sinhala',sans-serif;background:transparent;color:var(--text);min-height:100vh;padding-bottom:3rem;-webkit-font-smoothing:antialiased}
 
-  .header{background:linear-gradient(135deg,var(--maroon) 0%,#4A0E1A 50%,var(--maroon) 100%);padding:1.5rem 1rem 1.25rem;text-align:center;position:relative;overflow:hidden}
-  .header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C8860A' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");opacity:.5}
-  .header-deco{color:var(--gold-light);font-size:1.6rem;letter-spacing:.5rem;display:block;margin-bottom:.5rem;position:relative}
-  .header h1{font-family:'Noto Serif Sinhala',serif;font-size:clamp(1.5rem,7vw,2rem);font-weight:700;color:var(--gold-light);position:relative;text-shadow:0 2px 8px rgba(0,0,0,.4);line-height:1.3}
-  .header-sub{color:rgba(245,217,139,.7);font-size:.8rem;margin-top:.4rem;position:relative;letter-spacing:.1rem}
-  .lotus-divider{display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.9rem 0 1rem;position:relative}
-  .lotus-divider::before,.lotus-divider::after{content:'';flex:1;height:1px;background:var(--gold-light);opacity:.4}
-  .lotus-divider span{color:var(--gold-light);font-size:1rem}
+  /* ── LIQUID BACKDROP ── */
+  .bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(160deg,#fcecc9 0%,#f7cf93 42%,#eaa57f 100%)}
+  .orb{position:absolute;border-radius:50%;filter:blur(46px);animation:drift 20s ease-in-out infinite;will-change:transform}
+  .orb.o1{width:340px;height:340px;background:#e7a418;opacity:.8;top:-90px;left:-100px}
+  .orb.o2{width:380px;height:380px;background:#8f2238;opacity:.55;top:28%;right:-150px;animation-delay:-7s}
+  .orb.o3{width:320px;height:320px;background:#ee8a1f;opacity:.7;bottom:-90px;left:8%;animation-delay:-12s}
+  .orb.o4{width:240px;height:240px;background:#ff9db0;opacity:.55;top:58%;left:-70px;animation-delay:-4s}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(36px,-28px) scale(1.08)}66%{transform:translate(-26px,30px) scale(.94)}}
 
-  .year-tabs{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;padding:0 1rem 1.1rem;position:relative}
-  .year-btn{padding:.45rem 1.1rem;border-radius:50px;border:1.5px solid rgba(245,217,139,.35);background:rgba(245,217,139,.08);color:var(--gold-light);font-family:'Noto Sans Sinhala',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .18s,border-color .18s,color .18s,transform .12s;-webkit-tap-highlight-color:transparent;letter-spacing:.04rem}
+  /* ── GLASS PRIMITIVE ── */
+  .glass{
+    position:relative;
+    background:var(--glass-sheen),var(--glass-fill);
+    -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+    border:1px solid var(--glass-edge);
+    box-shadow:var(--glass-shadow);
+    border-radius:24px;
+  }
+  @supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+    .glass{background:rgba(255,248,235,.9)}
+  }
+
+  /* ── HEADER ── */
+  .header{margin:max(.75rem,env(safe-area-inset-top)) .75rem 0;padding:1.4rem 1rem 1.1rem;text-align:center;border-radius:30px;overflow:hidden}
+  .header-deco{color:var(--maroon);font-size:1.5rem;letter-spacing:.5rem;display:block;margin-bottom:.45rem;filter:drop-shadow(0 2px 4px rgba(255,255,255,.7))}
+  .header h1{font-family:'Noto Serif Sinhala',serif;font-size:clamp(1.5rem,7vw,2.05rem);font-weight:700;color:var(--maroon);text-shadow:0 1px 0 rgba(255,255,255,.8),0 4px 14px rgba(255,255,255,.5);line-height:1.35}
+  .header-sub{color:var(--text-muted);font-size:.8rem;margin-top:.35rem;letter-spacing:.08rem}
+  .lotus-divider{display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.8rem 0 .9rem}
+  .lotus-divider::before,.lotus-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(123,28,46,.35),transparent)}
+  .lotus-divider span{color:var(--maroon);font-size:1rem}
+
+  .year-tabs{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap}
+  .year-btn{padding:.45rem 1.15rem;border-radius:50px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--maroon);font-family:'Noto Sans Sinhala',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .2s,color .2s,transform .12s,box-shadow .2s;-webkit-tap-highlight-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 8px rgba(123,28,46,.08)}
   .year-btn:active{transform:scale(.95)}
-  .year-btn.active{background:var(--gold-light);color:var(--maroon);border-color:var(--gold-light);box-shadow:0 2px 10px rgba(200,134,10,.35)}
-  .year-btn.current-year{border-color:rgba(245,217,139,.7)}
+  .year-btn.active{background:linear-gradient(160deg,rgba(150,34,56,.92),rgba(92,18,34,.92));color:var(--gold-light);border-color:rgba(245,217,139,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 16px rgba(123,28,46,.35)}
 
-  #status-bar{display:flex;align-items:center;justify-content:center;gap:6px;padding:.4rem 1rem;font-size:.72rem;background:#555;color:#ddd;transition:background .4s,color .4s}
-  #status-bar.online{background:#1B5E20;color:#C8E6C9}
-  #status-bar.error{background:#7f1d1d;color:#fecaca}
-  #status-bar.syncing{background:#78350f;color:#fde68a}
+  #status-bar{display:flex;align-items:center;justify-content:center;gap:6px;width:max-content;max-width:calc(100% - 2rem);margin:.7rem auto 0;padding:.3rem .85rem;font-size:.7rem;font-weight:500;border-radius:50px;border:1px solid rgba(255,255,255,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);background:rgba(90,90,90,.25);color:#3d3d3d;transition:background .4s,color .4s}
+  #status-bar.online{background:rgba(46,125,50,.22);color:#1B5E20}
+  #status-bar.error{background:rgba(198,40,40,.24);color:#7f1d1d}
+  #status-bar.syncing{background:rgba(232,133,26,.28);color:#7a3d00}
   .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;display:inline-block}
   .syncing .sync-dot{animation:blink .8s infinite}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-  .main{padding:1.25rem 1rem;max-width:600px;margin:0 auto}
+  .main{padding:1.1rem .85rem;max-width:600px;margin:0 auto}
 
-  /* ── YEAR LABEL (centered) ── */
-  .year-label{
-    font-family:'Noto Serif Sinhala',serif;font-size:.85rem;font-weight:700;
-    color:var(--maroon);margin-bottom:.85rem;
-    display:flex;align-items:center;justify-content:center;gap:.5rem;
-    text-align:center;
-  }
-  .year-label-dot{width:8px;height:8px;border-radius:50%;background:var(--saffron);flex-shrink:0}
+  .year-label{font-family:'Noto Serif Sinhala',serif;font-size:.88rem;font-weight:700;color:var(--maroon);margin-bottom:.85rem;display:flex;align-items:center;justify-content:center;gap:.5rem;text-align:center;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+  .year-label-dot{width:8px;height:8px;border-radius:50%;background:var(--saffron);flex-shrink:0;box-shadow:0 0 0 3px rgba(255,255,255,.5)}
 
-  /* ── GRAND TOTAL CARD ── */
-  .grand-total-wrap{
-    margin-bottom:.85rem;
-    display:flex;justify-content:center;
-  }
+  /* ── COUNTDOWN ── */
+  .cd-card{display:none;padding:1.15rem 1rem 1.05rem;margin-bottom:1rem;text-align:center}
+  .cd-title{font-family:'Noto Serif Sinhala',serif;font-size:.92rem;font-weight:700;color:var(--maroon);line-height:1.5;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+  .cd-date{font-size:.76rem;color:var(--text-muted);margin:.25rem 0 .85rem;font-weight:500}
+  .cd-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem}
+  .cd-box{border-radius:18px;padding:.7rem .2rem .55rem;background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.18));border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -8px 14px rgba(232,133,26,.10),0 4px 14px rgba(123,28,46,.10)}
+  .cd-box.accent{background:linear-gradient(160deg,rgba(150,34,56,.9),rgba(84,16,32,.92));border-color:rgba(245,217,139,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 6px 18px rgba(123,28,46,.32)}
+  .cd-num{font-family:'Noto Serif Sinhala',serif;font-size:clamp(1.35rem,7vw,1.85rem);font-weight:700;color:var(--maroon);line-height:1.15;font-variant-numeric:tabular-nums}
+  .cd-box.accent .cd-num{color:var(--gold-light);text-shadow:0 2px 10px rgba(0,0,0,.35)}
+  .cd-lbl{font-size:.66rem;font-weight:600;color:var(--text-muted);letter-spacing:.04rem;margin-top:.15rem}
+  .cd-box.accent .cd-lbl{color:rgba(245,217,139,.8)}
+  .cd-msg{display:none;font-family:'Noto Serif Sinhala',serif;font-size:1rem;font-weight:700;color:var(--maroon);padding:.5rem 0;line-height:1.6}
+
+  /* ── GRAND TOTAL ── */
+  .grand-total-wrap{margin-bottom:.85rem;display:flex;justify-content:center}
   .grand-total-card{
-    position:relative;overflow:hidden;
-    background:linear-gradient(135deg,var(--maroon) 0%,#6B1428 45%,#3A0A10 100%);
-    border-radius:16px;
-    padding:1.25rem 1.5rem 1.1rem;
-    border:1.5px solid rgba(245,217,139,.25);
-    box-shadow:0 6px 28px rgba(123,28,46,.35),0 2px 8px rgba(200,134,10,.18),inset 0 1px 0 rgba(245,217,139,.15);
-    text-align:center;
-    width:100%;
-    max-width:420px;
+    position:relative;overflow:hidden;text-align:center;width:100%;max-width:420px;
+    background:linear-gradient(135deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,0) 30%),linear-gradient(150deg,rgba(150,34,56,.88) 0%,rgba(100,20,40,.9) 48%,rgba(58,10,16,.92) 100%);
+    -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+    border-radius:26px;padding:1.25rem 1.5rem 1.15rem;
+    border:1px solid rgba(245,217,139,.45);
+    box-shadow:0 12px 34px rgba(123,28,46,.38),0 2px 8px rgba(200,134,10,.2),inset 1px 1px 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(245,217,139,.2);
   }
-  /* shimmer sweep */
-  .grand-total-card::before{
-    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
-    background:linear-gradient(90deg,transparent,rgba(245,217,139,.10),transparent);
-    animation:shimmer 3.2s ease-in-out infinite;
-    pointer-events:none;
-  }
+  .grand-total-card::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);animation:shimmer 3.4s ease-in-out infinite;pointer-events:none}
   @keyframes shimmer{0%{left:-100%}60%,100%{left:160%}}
-  /* decorative glow dots */
-  .grand-total-card::after{
-    content:'🪷';position:absolute;right:1rem;top:.65rem;
-    font-size:1.2rem;opacity:.25;pointer-events:none;
-    animation:floatLotus 4s ease-in-out infinite;
-  }
+  .grand-total-card::after{content:'🪷';position:absolute;right:1rem;top:.65rem;font-size:1.2rem;opacity:.3;pointer-events:none;animation:floatLotus 4s ease-in-out infinite}
   @keyframes floatLotus{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-4px) rotate(5deg)}}
-  .gt-label{
-    font-size:.7rem;font-weight:600;letter-spacing:.12rem;text-transform:uppercase;
-    color:rgba(245,217,139,.65);margin-bottom:.45rem;
-  }
+  .gt-label{font-size:.7rem;font-weight:600;letter-spacing:.12rem;text-transform:uppercase;color:rgba(245,217,139,.75);margin-bottom:.45rem}
   .gt-amount-wrap{display:flex;align-items:baseline;justify-content:center;gap:.35rem}
-  .gt-currency{font-size:.95rem;font-weight:600;color:var(--gold-light);opacity:.85}
-  .gt-amount{
-    font-size:clamp(1.8rem,7vw,2.4rem);font-weight:700;
-    color:var(--gold-light);
-    text-shadow:0 2px 12px rgba(200,134,10,.4);
-    font-family:'Noto Serif Sinhala',serif;
-    letter-spacing:.02rem;
-    transition:transform .25s cubic-bezier(.34,1.56,.64,1);
-  }
+  .gt-currency{font-size:.95rem;font-weight:600;color:var(--gold-light);opacity:.9}
+  .gt-amount{font-size:clamp(1.8rem,7vw,2.4rem);font-weight:700;color:var(--gold-light);text-shadow:0 2px 14px rgba(200,134,10,.5);font-family:'Noto Serif Sinhala',serif;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
   .gt-amount.bump{transform:scale(1.08)}
-  .gt-divider{
-    width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,217,139,.4),transparent);
-    margin:.75rem auto .65rem;
-  }
-  .gt-sub-row{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
-  .gt-sub{text-align:center}
-  .gt-sub-lbl{font-size:.64rem;color:rgba(245,217,139,.5);font-weight:600;text-transform:uppercase;letter-spacing:.08rem;margin-bottom:.2rem}
-  .gt-sub-val{font-size:.88rem;font-weight:700;color:rgba(245,217,139,.8);font-family:monospace}
-  .gt-sub-val.green{color:#86efac}
 
-  /* ── EXISTING TOTALS ── */
-  .totals{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
-  .total-card{background:white;border-radius:var(--radius);padding:1rem;border:1.5px solid var(--border);box-shadow:var(--shadow);text-align:center}
-  .total-card.paid{border-color:#A5D6A7}
-  .total-label{font-size:.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.08rem;margin-bottom:.3rem}
-  .total-card.paid .total-label{color:var(--success)}
-  .total-amount{font-size:1.3rem;font-weight:700;color:var(--saffron-dark)}
-  .total-card.paid .total-amount{color:var(--success)}
+  /* ── TOTAL CARDS ── */
+  .totals{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem}
+  .total-card{padding:1rem;text-align:center;border-radius:22px}
+  .total-card.paid{background:var(--glass-sheen),rgba(76,175,80,.2)}
+  .total-label{font-size:.7rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07rem;margin-bottom:.3rem}
+  .total-card.paid .total-label{color:#1B5E20}
+  .total-amount{font-size:1.28rem;font-weight:700;color:var(--saffron-dark)}
+  .total-card.paid .total-amount{color:#1B5E20}
   .total-currency{font-size:.75rem;font-weight:500}
 
-  .add-section{background:white;border-radius:var(--radius);padding:1.25rem;border:1.5px solid var(--border);box-shadow:var(--shadow);margin-bottom:1.25rem}
-  .section-title{font-family:'Noto Serif Sinhala',serif;font-size:.9rem;font-weight:600;color:var(--maroon);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-  .section-title::before{content:'✦';color:var(--gold);font-size:.75rem}
+  /* ── ADD FORM ── */
+  .add-section{padding:1.25rem;margin-bottom:1.1rem}
+  .section-title{font-family:'Noto Serif Sinhala',serif;font-size:.92rem;font-weight:700;color:var(--maroon);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  .section-title::before{content:'✦';color:var(--saffron);font-size:.75rem}
   .form-row{display:flex;flex-direction:column;gap:.75rem}
   .form-group{display:flex;flex-direction:column;gap:.35rem}
-  label{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06rem}
-  input[type="text"],input[type="password"]{width:100%;padding:.75rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;color:var(--text);background:var(--cream);outline:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
-  input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
-  .btn-add{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--saffron) 0%,var(--gold) 100%);color:white;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:.1rem}
-  .btn-add:active{opacity:.85}
+  label{font-size:.76rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05rem}
+  input[type="text"],input[type="password"]{width:100%;padding:.78rem .95rem;border:1px solid rgba(255,255,255,.75);border-radius:15px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.95rem;color:var(--text);background:rgba(255,255,255,.42);outline:none;-webkit-appearance:none;box-shadow:inset 0 2px 6px rgba(123,28,46,.08),inset 0 1px 0 rgba(255,255,255,.6);transition:border-color .2s,box-shadow .2s,background .2s}
+  input::placeholder{color:#a37a52}
+  input:focus{border-color:rgba(232,133,26,.8);background:rgba(255,255,255,.62);box-shadow:inset 0 2px 6px rgba(123,28,46,.06),0 0 0 4px rgba(232,133,26,.18)}
+  .btn-add{width:100%;padding:.88rem;background:linear-gradient(180deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,0) 50%),linear-gradient(135deg,var(--saffron) 0%,var(--gold) 100%);color:white;border:1px solid rgba(255,255,255,.55);border-radius:16px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.97rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:.1rem;text-shadow:0 1px 2px rgba(120,60,0,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 8px 20px rgba(232,133,26,.38);transition:transform .12s,box-shadow .2s}
+  .btn-add:active{transform:scale(.98);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 10px rgba(232,133,26,.3)}
 
-  .acc-wrap{padding:0 0 1.25rem}
-  .acc-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;background:white;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--maroon);transition:background .15s,border-color .15s;gap:.5rem;font-family:'Noto Sans Sinhala',sans-serif}
-  .acc-toggle:hover{background:var(--gold-bg);border-color:var(--gold)}
+  /* ── ACCOUNT ACCORDION ── */
+  .acc-wrap{padding:0 0 1.1rem}
+  .acc-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.15rem;cursor:pointer;font-size:.92rem;font-weight:600;color:var(--maroon);gap:.5rem;font-family:'Noto Sans Sinhala',sans-serif;border-radius:20px;text-align:left}
   .acc-toggle-left{display:flex;align-items:center;gap:.6rem}
-  .acc-toggle .chev{font-size:.85rem;color:var(--gold);transition:transform .3s;line-height:1;flex-shrink:0}
+  .acc-toggle .chev{font-size:.8rem;color:var(--saffron-dark);transition:transform .3s;line-height:1;flex-shrink:0}
   .acc-toggle.open .chev{transform:rotate(180deg)}
   .acc-body{overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
-  .acc-body.open{max-height:320px;margin-top:.5rem}
-  .acc-card{background:white;border:1.5px solid var(--border);border-radius:10px;padding:1.1rem 1.1rem .9rem;box-shadow:var(--shadow)}
-  .acc-header{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem;padding-bottom:.75rem;border-bottom:1px solid rgba(229,201,122,.4)}
-  .acc-bank-icon{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--maroon),#4A0E1A);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-  .acc-bank-title{font-family:'Noto Serif Sinhala',serif;font-size:.88rem;font-weight:700;color:var(--maroon);line-height:1.3}
+  .acc-body.open{max-height:320px;margin-top:.55rem}
+  .acc-card{padding:1.1rem 1.1rem .9rem;border-radius:20px}
+  .acc-header{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem;padding-bottom:.75rem;border-bottom:1px solid rgba(123,28,46,.14)}
+  .acc-bank-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,rgba(150,34,56,.95),rgba(74,14,26,.95));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 10px rgba(123,28,46,.3)}
+  .acc-bank-title{font-family:'Noto Serif Sinhala',serif;font-size:.9rem;font-weight:700;color:var(--maroon);line-height:1.3}
   .acc-bank-sub{font-size:.72rem;color:var(--saffron-dark);margin-top:.15rem}
   .acc-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;gap:.5rem}
-  .acc-row:not(:last-child){border-bottom:1px solid rgba(229,201,122,.25)}
+  .acc-row:not(:last-child){border-bottom:1px solid rgba(123,28,46,.1)}
   .acc-row-label{font-size:.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05rem;flex-shrink:0}
   .acc-row-right{display:flex;align-items:center;gap:.5rem;min-width:0}
   .acc-value{font-size:.9rem;font-weight:600;color:var(--text);font-family:monospace;word-break:break-all}
-  .copy-btn{background:var(--gold-bg);border:1.5px solid var(--border);border-radius:6px;padding:.28rem .6rem;font-size:.72rem;color:var(--saffron-dark);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Noto Sans Sinhala',sans-serif;font-weight:600;transition:background .12s,border-color .12s;-webkit-tap-highlight-color:transparent}
-  .copy-btn:hover{background:#F5D98B;border-color:var(--gold)}
+  .copy-btn{background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:.3rem .65rem;font-size:.72rem;color:var(--saffron-dark);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Noto Sans Sinhala',sans-serif;font-weight:600;transition:background .12s;-webkit-tap-highlight-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
   .copy-btn:active{opacity:.8}
-  .copy-btn.copied{background:var(--success-bg);border-color:#A5D6A7;color:var(--success)}
+  .copy-btn.copied{background:rgba(76,175,80,.25);color:var(--success)}
 
-  .table-section{background:white;border-radius:var(--radius);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
-  .search-wrap{padding:.75rem 1rem;border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
-  .search-inp{width:100%;padding:.6rem .9rem .6rem 2.2rem;border:1.5px solid var(--border);border-radius:8px;font-family:"Noto Sans Sinhala",sans-serif;font-size:.88rem;color:var(--text);background:white;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A5C3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.65rem center;transition:border-color .2s}
-  .search-inp:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
-  .search-inp::placeholder{color:#b8956a}
+  /* ── LISTS (contributors + expenses) ── */
+  .table-section{overflow:hidden;margin-bottom:1.1rem}
+  .search-wrap{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.18)}
+  .search-inp{padding-left:2.3rem !important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A5C3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.75rem center;font-size:.88rem !important}
   .no-results{text-align:center;padding:1.5rem;color:var(--text-muted);font-size:.85rem}
-  .highlight{background:#FFF176;border-radius:2px;padding:0 1px}
-  .table-header-row{background:linear-gradient(135deg,var(--maroon),#5A1020);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between}
-  .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.85rem;font-weight:600}
-  .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(245,217,139,.3)}
+  .highlight{background:rgba(255,235,59,.7);border-radius:3px;padding:0 1px}
+  .table-header-row{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 60%),linear-gradient(135deg,rgba(150,34,56,.86),rgba(92,18,34,.9));padding:.95rem 1.1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,217,139,.3)}
+  .table-title{font-family:'Noto Serif Sinhala',serif;color:var(--gold-light);font-size:.88rem;font-weight:600}
+  .count-badge{background:rgba(245,217,139,.2);color:var(--gold-light);font-size:.75rem;padding:.2rem .65rem;border-radius:20px;border:1px solid rgba(245,217,139,.4)}
   .table-wrapper{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:300px}
-  thead tr{background:var(--gold-bg);border-bottom:2px solid var(--border)}
-  th{padding:.7rem .75rem;text-align:left;font-size:.72rem;font-weight:700;color:var(--saffron-dark);text-transform:uppercase;letter-spacing:.06rem;white-space:nowrap}
+  thead tr{background:rgba(255,255,255,.22);border-bottom:1px solid rgba(123,28,46,.15)}
+  th{padding:.7rem .85rem;text-align:left;font-size:.7rem;font-weight:700;color:var(--saffron-dark);text-transform:uppercase;letter-spacing:.06rem;white-space:nowrap}
   th.c,td.c{text-align:center}
-  td{padding:.75rem .75rem;border-bottom:1px solid rgba(229,201,122,.3);color:var(--text);vertical-align:middle}
+  td{padding:.78rem .85rem;border-bottom:1px solid rgba(255,255,255,.45);color:var(--text);vertical-align:middle}
   tr:last-child td{border-bottom:none}
-  tr.paid-row{background:var(--success-bg)}
-  tr.paid-row td{color:#2E7D32}
+  tr.paid-row{background:rgba(76,175,80,.16)}
+  tr.paid-row td{color:#1B5E20}
   .name-cell{font-weight:600;user-select:none;-webkit-user-select:none}
   .amt{font-weight:500;font-family:monospace;font-size:.9rem;color:var(--saffron-dark)}
-  tr.paid-row .amt{color:#2E7D32}
+  tr.paid-row .amt{color:#1B5E20}
   .cb-wrap{display:flex;align-items:center;justify-content:center}
-  .check-label{width:26px;height:26px;border-radius:6px;border:2px solid var(--border);background:white;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s;font-size:0;line-height:1}
-  .check-label.is-checked{background:var(--success);border-color:var(--success);font-size:16px;color:white;font-weight:700}
+  .check-label{width:26px;height:26px;border-radius:9px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0;line-height:1;box-shadow:inset 0 1px 3px rgba(123,28,46,.1);cursor:default}
+  .check-label.is-checked{background:linear-gradient(160deg,#4caf50,#2E7D32);border-color:rgba(255,255,255,.6);font-size:15px;color:white;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 8px rgba(46,125,50,.35)}
   .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:.9rem}
   .empty-icon{font-size:2.5rem;margin-bottom:.5rem}
-  .name-cell.pressing{background:rgba(200,134,10,0.08);border-radius:4px;transition:background .1s}
+  .name-cell.pressing{background:rgba(200,134,10,0.12);border-radius:6px;transition:background .1s}
 
-  .ctx-menu{position:fixed;background:white;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22),0 2px 8px rgba(200,134,10,.15);border:1.5px solid var(--border);overflow:hidden;z-index:2000;min-width:200px;animation:popIn .18s cubic-bezier(.34,1.56,.64,1);transform-origin:top left}
+  .exp-body{padding:.35rem 0}
+  .exp-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.78rem 1rem;border-bottom:1px solid rgba(255,255,255,.45)}
+  .exp-row:last-child{border-bottom:none}
+  .exp-name{font-weight:600;font-size:.9rem;word-break:break-word}
+  .exp-row .amt{white-space:nowrap}
+  .exp-empty{text-align:center;padding:1.8rem 1rem;color:var(--text-muted);font-size:.86rem}
+  .exp-total-row{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0)),rgba(232,133,26,.18);border-top:1px solid rgba(123,28,46,.14);font-weight:700;color:var(--maroon);font-size:.9rem}
+  .exp-total-row .amt{color:var(--maroon);font-weight:700;font-size:1rem}
+
+  /* ── MENUS / MODALS ── */
+  .ctx-menu{position:fixed;overflow:hidden;z-index:2000;min-width:210px;border-radius:20px;animation:popIn .18s cubic-bezier(.34,1.56,.64,1);transform-origin:top left;background:var(--glass-sheen),rgba(255,255,255,.55);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);border:1px solid var(--glass-edge);box-shadow:0 16px 44px rgba(60,10,20,.3),inset 1px 1px 0 rgba(255,255,255,.9)}
   @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-  .ctx-name{padding:.75rem 1rem .5rem;font-family:'Noto Serif Sinhala',serif;font-size:.82rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(229,201,122,.4);background:var(--gold-bg)}
-  .ctx-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;font-size:.88rem;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(229,201,122,.2);transition:background .12s}
+  .ctx-name{padding:.8rem 1rem .55rem;font-family:'Noto Serif Sinhala',serif;font-size:.84rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(123,28,46,.12)}
+  .ctx-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;font-size:.88rem;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(123,28,46,.08);transition:background .12s}
   .ctx-item:last-child{border-bottom:none}
-  .ctx-item:active{background:var(--gold-bg)}
+  .ctx-item:active{background:rgba(255,255,255,.5)}
   .ctx-item .ctx-icon{font-size:1.1rem;flex-shrink:0}
   .ctx-item.danger{color:#c62828}
   .ctx-backdrop{position:fixed;inset:0;z-index:1999}
 
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
-  .modal{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)}
-  .modal-icon{font-size:2rem;margin-bottom:.75rem}
-  .modal-title{font-family:'Noto Serif Sinhala',serif;font-size:.95rem;color:var(--text);margin-bottom:.4rem;font-weight:600}
-  .modal-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.5}
-  .btn-row{display:flex;gap:.75rem;margin-top:.25rem}
-  .btn-no{flex:1;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;background:white;font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:var(--text-muted)}
-  .btn-yes{flex:1;padding:.75rem;border:none;border-radius:8px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:white;font-weight:600;background:var(--success)}
-  .btn-yes.red{background:#c62828}
-  .pwd-field{width:100%;padding:.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:1.4rem;text-align:center;letter-spacing:.4rem;outline:none;-webkit-appearance:none;font-family:monospace;margin-bottom:.4rem;background:var(--cream)}
-  .pwd-field:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,133,26,.15)}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(50,12,20,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+  .modal{max-width:330px;width:100%;text-align:center;padding:1.6rem 1.4rem;border-radius:28px;background:var(--glass-sheen),rgba(255,255,255,.58);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);border:1px solid var(--glass-edge);box-shadow:0 24px 60px rgba(50,10,20,.38),inset 1px 1px 0 rgba(255,255,255,.95),inset -1px -1px 0 rgba(255,255,255,.4)}
+  .modal-icon{font-size:2rem;margin-bottom:.7rem}
+  .modal-title{font-family:'Noto Serif Sinhala',serif;font-size:.97rem;color:var(--maroon);margin-bottom:.4rem;font-weight:700}
+  .modal-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.55}
+  .btn-row{display:flex;gap:.7rem;margin-top:.25rem}
+  .btn-no{flex:1;padding:.75rem;border:1px solid rgba(255,255,255,.85);border-radius:15px;background:rgba(255,255,255,.5);font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:var(--text-muted);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+  .btn-yes{flex:1;padding:.75rem;border:1px solid rgba(255,255,255,.5);border-radius:15px;font-family:'Noto Sans Sinhala',sans-serif;font-size:.9rem;cursor:pointer;color:white;font-weight:600;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 55%),linear-gradient(135deg,#43a047,#2E7D32);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 16px rgba(46,125,50,.35)}
+  .btn-yes.red{background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 55%),linear-gradient(135deg,#e53935,#b71c1c);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 16px rgba(198,40,40,.35)}
+  .pwd-field{width:100%;padding:.8rem;border:1px solid rgba(255,255,255,.8);border-radius:15px;font-size:1.4rem;text-align:center;letter-spacing:.4rem;outline:none;-webkit-appearance:none;font-family:monospace;margin-bottom:.4rem;background:rgba(255,255,255,.45);box-shadow:inset 0 2px 6px rgba(123,28,46,.08)}
+  .pwd-field:focus{border-color:rgba(232,133,26,.8);box-shadow:0 0 0 4px rgba(232,133,26,.18)}
   .pwd-err{font-size:.8rem;color:#c62828;margin-bottom:.75rem;display:none}
   .edit-fields{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;text-align:left}
-  .edit-fields label{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06rem;display:block;margin-bottom:.3rem}
-  .edit-fields input[type="text"]{font-size:.95rem}
+  .edit-fields label{display:block;margin-bottom:.3rem}
 
-  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--maroon);color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none}
+  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:linear-gradient(135deg,rgba(150,34,56,.92),rgba(74,14,26,.94));color:var(--gold-light);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:transform .3s ease;z-index:3000;white-space:nowrap;border:1px solid rgba(245,217,139,.4);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 26px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.3);pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0)}
+
+  @media (prefers-reduced-motion:reduce){.orb,.grand-total-card::before,.grand-total-card::after{animation:none}}
 </style>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="බත් දන්සල">
-<meta name="theme-color" content="#7B1C2E">
+<meta name="theme-color" content="#f7cf93">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-<div class="header">
+<div class="bg" aria-hidden="true">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div>
+</div>
+
+<div class="header glass">
   <span class="header-deco">🪷 ✦ 🪷</span>
-  <h1>පොසොන් මහා බත් දන්සල</h1>
+  <h1 id="main-title">මහා බත් දන්සල</h1>
   <p class="header-sub">දන්සල සඳහා දායකත්ව වාර්තාව</p>
   <div class="lotus-divider"><span>☸</span></div>
   <div class="year-tabs" id="year-tabs"></div>
@@ -234,10 +247,22 @@
 
 <div class="main">
 
-  <!-- YEAR LABEL (centered) -->
   <div class="year-label">
     <span class="year-label-dot"></span>
     <span id="year-label-text"></span>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="cd-card glass" id="cd-card">
+    <div class="cd-title" id="cd-title">දන්සලට පැවැත්වීමට ඇත්තේ තව දින</div>
+    <div class="cd-date" id="cd-date"></div>
+    <div class="cd-tiles" id="cd-tiles">
+      <div class="cd-box accent"><div class="cd-num" id="cd-d">0</div><div class="cd-lbl">දින</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">පැය</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">මිනිත්තු</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">තත්පර</div></div>
+    </div>
+    <div class="cd-msg" id="cd-msg"></div>
   </div>
 
   <!-- GRAND TOTAL CARD -->
@@ -248,28 +273,26 @@
         <span class="gt-currency">රු.</span>
         <span class="gt-amount" id="grand-total">0.00</span>
       </div>
-
     </div>
   </div>
 
-  <!-- EXISTING TWO CARDS -->
   <div class="totals">
-    <div class="total-card">
+    <div class="total-card glass">
       <div class="total-label">ලැබීමට නියමිත මුදල</div>
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-pending">0.00</span></div>
     </div>
-    <div class="total-card paid">
+    <div class="total-card glass paid">
       <div class="total-label">දැනට ලැබී ඇති මුදල</div>
       <div class="total-amount"><span class="total-currency">රු. </span><span id="total-paid">0.00</span></div>
     </div>
   </div>
 
-  <div class="add-section">
+  <div class="add-section glass">
     <div class="section-title" id="add-section-title">දායකයා එකතු කරන්න</div>
     <div class="form-row">
       <div class="form-group">
         <label for="inp-name">නම</label>
-        <input type="text" id="inp-name" placeholder="දායකයාගේ නම ඇතුළත් කරන්න" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input type="text" id="inp-name" placeholder="දායකයෙක් ලෙස ඉදිරිපත් වීමට" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       </div>
       <div class="form-group">
         <label for="inp-amount">ලබා දීමට කැමති මුදල (රු.)</label>
@@ -281,7 +304,7 @@
 
   <!-- ACCOUNT DETAILS ACCORDION -->
   <div class="acc-wrap">
-    <button class="acc-toggle" id="accToggle" type="button" aria-expanded="false">
+    <button class="acc-toggle glass" id="accToggle" type="button" aria-expanded="false">
       <div class="acc-toggle-left">
         <span style="font-size:1.05rem">🏦</span>
         <span>ගිණුම් විස්තර</span>
@@ -289,7 +312,7 @@
       <span class="chev">▼</span>
     </button>
     <div class="acc-body" id="accBody">
-      <div class="acc-card">
+      <div class="acc-card glass">
         <div class="acc-header">
           <div class="acc-bank-icon">💳</div>
           <div>
@@ -315,7 +338,8 @@
     </div>
   </div>
 
-  <div class="table-section">
+  <!-- CONTRIBUTORS -->
+  <div class="table-section glass">
     <div class="table-header-row">
       <span class="table-title" id="table-title">✦ දායකයන් ලැයිස්තුව</span>
       <span class="count-badge" id="count-badge">0</span>
@@ -338,9 +362,24 @@
       </table>
     </div>
   </div>
+
+  <!-- EXPENSES (below contributors) -->
+  <div class="table-section glass">
+    <div class="table-header-row">
+      <span class="table-title" id="exp-title">✦ දන්සලට යන වියදම්</span>
+      <span class="count-badge" id="exp-badge">0</span>
+    </div>
+    <div class="exp-body" id="exp-body">
+      <div class="exp-empty">🧾 වියදම් තවම ඇතුළත් කර නැත</div>
+    </div>
+    <div class="exp-total-row" id="exp-total-row" style="display:none">
+      <span>මුළු වියදම</span>
+      <span class="amt">රු. <span id="exp-total">0.00</span></span>
+    </div>
+  </div>
 </div>
 
-<!-- PASSWORD MODAL -->
+<!-- PASSWORD MODAL (edit / delete only) -->
 <div class="overlay" id="pwd-modal">
   <div class="modal">
     <div class="modal-icon">🔒</div>
@@ -427,10 +466,70 @@ var FIREBASE_CONFIG = {
 var START_YEAR = 2025;
 var CURRENT_YEAR = new Date().getFullYear();
 var activeYear = CURRENT_YEAR;
+var FEST = { vesak:'වෙසක්', poson:'පොසොන්', esala:'ඇසල' };
+var MONTHS = ['ජනවාරි','පෙබරවාරි','මාර්තු','අප්‍රේල්','මැයි','ජූනි','ජූලි','අගෝස්තු','සැප්තැම්බර්','ඔක්තෝබර්','නොවැම්බර්','දෙසැම්බර්'];
 
-var entries=[],db=null,fbRef=null,activeRef=null,ready=false,searchQ="",PWD='1157',toastTmr=null;
-var pendingToggle=null, pendingDel=null, pendingEdit=null, pwdAction=null;
+var entries=[],expenses=[],db=null,fbRef=null,activeRef=null,expRef=null,ready=false,searchQ="",PWD='1157',toastTmr=null;
+var pendingDel=null, pendingEdit=null, pwdAction=null;
 var gtBumpTimer=null;
+var configByYear={}, cfgLoaded=false;
+
+// ── FESTIVAL TITLE (set by admin) ─────────
+function festLabel(){
+  if(cfgLoaded){
+    var c=configByYear[activeYear];
+    return (c && c.festival && FEST[c.festival]) ? FEST[c.festival] : null;
+  }
+  // before Firebase answers, use the last known value so the title doesn't flicker
+  try{ return localStorage.getItem('dansala_fest_'+activeYear) || null; }catch(e){ return null; }
+}
+function applyFestival(){
+  var l = festLabel();
+  var title = l ? (l + ' මහා බත් දන්සල') : 'මහා බත් දන්සල';
+  document.getElementById('main-title').textContent = title;
+  document.title = title;
+  document.getElementById('year-label-text').textContent = activeYear + ' ' + (l ? l + ' ' : '') + 'දන්සල';
+  if(cfgLoaded){
+    try{
+      if(l) localStorage.setItem('dansala_fest_'+activeYear, l);
+      else localStorage.removeItem('dansala_fest_'+activeYear);
+    }catch(e){}
+  }
+}
+
+// ── COUNTDOWN ─────────────────────────────
+function parseDate(s){
+  if(!s) return null;
+  var p=String(s).split('-');
+  if(p.length!==3) return null;
+  var d=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10),0,0,0,0);
+  return isNaN(d.getTime()) ? null : d;
+}
+function pad2(n){ return (n<10?'0':'')+n; }
+function renderCountdown(){
+  var card=document.getElementById('cd-card');
+  var c=configByYear[activeYear];
+  var d=c ? parseDate(c.date) : null;
+  if(!d){ card.style.display='none'; return; }
+  card.style.display='block';
+  document.getElementById('cd-date').textContent='📅 '+d.getFullYear()+' '+MONTHS[d.getMonth()]+' '+d.getDate();
+  var now=new Date(), diff=d.getTime()-now.getTime();
+  var tiles=document.getElementById('cd-tiles'), msg=document.getElementById('cd-msg'), title=document.getElementById('cd-title');
+  if(diff>0){
+    tiles.style.display='grid'; msg.style.display='none'; title.style.display='block';
+    title.textContent='දන්සලට පැවැත්වීමට ඇත්තේ තව දින';
+    var sec=Math.floor(diff/1000);
+    document.getElementById('cd-d').textContent=Math.floor(sec/86400);
+    document.getElementById('cd-h').textContent=pad2(Math.floor(sec%86400/3600));
+    document.getElementById('cd-m').textContent=pad2(Math.floor(sec%3600/60));
+    document.getElementById('cd-s').textContent=pad2(sec%60);
+  } else {
+    tiles.style.display='none'; title.style.display='none'; msg.style.display='block';
+    var endOfDay=d.getTime()+86400000;
+    msg.textContent = now.getTime()<endOfDay ? '🙏 අද දන්සල පවත්වන දිනයයි' : '🙏 දන්සල සාර්ථකව පැවැත්විණි — සාදු! සාදු! සාදු!';
+  }
+}
+setInterval(renderCountdown,1000);
 
 // ── YEAR TABS ─────────────────────────────
 function buildYearTabs(){
@@ -439,16 +538,18 @@ function buildYearTabs(){
   for(var y = START_YEAR; y <= CURRENT_YEAR; y++){
     (function(yr){
       var btn = document.createElement('button');
-      btn.className = 'year-btn' + (yr === CURRENT_YEAR ? ' current-year' : '') + (yr === activeYear ? ' active' : '');
+      btn.className = 'year-btn' + (yr === activeYear ? ' active' : '');
       btn.textContent = yr;
       btn.type = 'button';
       btn.addEventListener('click', function(){ switchYear(yr); });
       wrap.appendChild(btn);
     })(y);
   }
-  document.getElementById('year-label-text').textContent = activeYear + ' පොසොන් දන්සල';
+  applyFestival();
+  renderCountdown();
   document.getElementById('add-section-title').textContent = activeYear + ' — දායකයා එකතු කරන්න';
   document.getElementById('table-title').textContent = '✦ ' + activeYear + ' දායකයන් ලැයිස්තුව';
+  document.getElementById('exp-title').textContent = '✦ ' + activeYear + ' දන්සලට යන වියදම්';
 }
 
 function switchYear(yr){
@@ -462,6 +563,7 @@ function switchYear(yr){
 
 // ── FIREBASE ──────────────────────────────
 function initFB(){
+  buildYearTabs();
   try{
     if(firebase.apps.length){ firebase.app().delete().then(doConnect).catch(doConnect); }
     else { doConnect(); }
@@ -472,14 +574,22 @@ function doConnect(){
   try{
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
-    buildYearTabs();
+    db.ref('dansala/config').on('value', function(snap){
+      configByYear = {};
+      snap.forEach(function(c){ configByYear[parseInt(c.key,10)] = c.val() || {}; });
+      cfgLoaded = true;
+      applyFestival();
+      renderCountdown();
+    });
     subscribeYear();
   } catch(e){ setStatus('error','Error: '+e.message); }
 }
 
 function subscribeYear(){
+  if(!db) return;
   if(activeRef){ activeRef.off(); }
-  entries = []; ready = false; render();
+  if(expRef){ expRef.off(); }
+  entries = []; expenses = []; ready = false; render(); renderExpenses();
   setStatus('syncing','සම්බන්ධ වෙමින්...');
   activeRef = db.ref('dansala/' + activeYear + '/entries');
   fbRef = activeRef;
@@ -491,6 +601,13 @@ function subscribeYear(){
     setStatus('online','Real-time Sync · ' + activeYear);
     render();
   }, function(err){ setStatus('error','Firebase Error: '+err.code); });
+  expRef = db.ref('dansala/' + activeYear + '/expenses');
+  expRef.on('value', function(snap){
+    expenses = [];
+    snap.forEach(function(c){ expenses.push(c.val()); });
+    expenses.sort(function(a,b){ return a.id - b.id; });
+    renderExpenses();
+  });
 }
 
 function setStatus(cls,msg){
@@ -515,17 +632,14 @@ function addEntry(){
   });
 }
 
-// ── PASSWORD ──────────────────────────────
+// ── PASSWORD (edit / delete only — the paid tick is admin-only now) ──
 function askPwd(id, action){
-  pwdAction = action || 'toggle';
+  pwdAction = action;
   var e = getEntry(id);
-  if(pwdAction === 'toggle'){
-    pendingToggle = id;
-    document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — '+(e.paid?'ගෙවීම ඉවත් කිරීමට':'ගෙවූ ලෙස සලකුණු කිරීමට') : '';
-  } else if(pwdAction === 'edit'){
+  if(action === 'edit'){
     pendingEdit = id;
     document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — සංස්කරණය කිරීමට' : '';
-  } else if(pwdAction === 'delete'){
+  } else if(action === 'delete'){
     pendingDel = id;
     document.getElementById('pwd-sub').textContent = e ? '"'+e.name+'" — ඉවත් කිරීමට' : '';
   }
@@ -538,11 +652,7 @@ function askPwd(id, action){
 function submitPwd(){
   if(document.getElementById('pwd-input').value === PWD){
     document.getElementById('pwd-modal').style.display = 'none';
-    if(pwdAction === 'toggle'){
-      var id = pendingToggle; pendingToggle = null;
-      var e = getEntry(id);
-      if(e){ e.paid = !e.paid; render(); doToggle(id, e.paid); }
-    } else if(pwdAction === 'edit'){
+    if(pwdAction === 'edit'){
       var eid = pendingEdit; pendingEdit = null;
       pwdAction = null;
       openEditModal(eid);
@@ -561,14 +671,7 @@ function submitPwd(){
 
 function cancelPwd(){
   document.getElementById('pwd-modal').style.display = 'none';
-  pendingToggle = null; pendingEdit = null; pendingDel = null; pwdAction = null;
-  render();
-}
-
-function doToggle(id, newVal){
-  if(!ready) return;
-  setStatus('syncing','සමමුහුර්ත කරමින්...');
-  fbRef.child(String(id)).update({paid: newVal});
+  pendingEdit = null; pendingDel = null; pwdAction = null;
 }
 
 // ── DELETE ────────────────────────────────
@@ -674,6 +777,26 @@ function bumpGT(){
   gtBumpTimer=setTimeout(function(){ el.classList.remove('bump'); },300);
 }
 
+function renderExpenses(){
+  var body=document.getElementById('exp-body');
+  var totalRow=document.getElementById('exp-total-row');
+  var tot=0;
+  for(var i=0;i<expenses.length;i++){ tot+=(parseFloat(expenses[i].amount)||0); }
+  document.getElementById('exp-badge').textContent=expenses.length;
+  if(!expenses.length){
+    body.innerHTML='<div class="exp-empty">🧾 වියදම් තවම ඇතුළත් කර නැත</div>';
+    totalRow.style.display='none';
+    return;
+  }
+  var h='';
+  for(var j=0;j<expenses.length;j++){
+    h+='<div class="exp-row"><span class="exp-name">'+esc(expenses[j].name)+'</span><span class="amt">රු. '+fmt(expenses[j].amount)+'</span></div>';
+  }
+  body.innerHTML=h;
+  document.getElementById('exp-total').textContent=fmt(tot);
+  totalRow.style.display='flex';
+}
+
 function render(){
   var tbody=document.getElementById('tbody');
   var tp=0,tpd=0;
@@ -683,12 +806,10 @@ function render(){
   }
   var grandTotal = tp + tpd;
 
-  // Update grand total card
   var gtEl=document.getElementById('grand-total');
   var prevGT=gtEl.textContent;
   var newGT=fmt(grandTotal);
   if(prevGT!==newGT){ gtEl.textContent=newGT; bumpGT(); }
-  // Update existing cards
   document.getElementById('total-pending').textContent=fmt(tp);
   document.getElementById('total-paid').textContent=fmt(tpd);
   document.getElementById('count-badge').textContent=entries.length;
@@ -706,19 +827,15 @@ function render(){
   var h='';
   for(var j=0;j<filtered.length;j++){
     var e=filtered[j];
-    var dn=q?e.name.replace(new RegExp('('+escRe(q)+')','gi'),'<mark class="highlight">$1</mark>'):esc(e.name);
+    var dn=q?esc(e.name).replace(new RegExp('('+escRe(esc(q))+')','gi'),'<mark class="highlight">$1</mark>'):esc(e.name);
     h+='<tr class="'+(e.paid?'paid-row':'')+'">';
     h+='<td class="name-cell longpress-target" data-id="'+e.id+'">'+dn+'</td>';
     h+='<td class="c amt">රු. '+fmt(e.pending)+'</td>';
-    h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+' cb-btn" data-id="'+e.id+'">'+(e.paid?'✓':'')+'</span></div></td>';
+    // read-only tick: only the admin page can change it
+    h+='<td class="c"><div class="cb-wrap"><span class="check-label'+(e.paid?' is-checked':'')+'">'+(e.paid?'✓':'')+'</span></div></td>';
     h+='</tr>';
   }
   tbody.innerHTML=h;
-
-  var cbs=tbody.querySelectorAll('.cb-btn');
-  for(var k=0;k<cbs.length;k++){ (function(el){
-    el.addEventListener('click',function(){ askPwd(parseInt(el.getAttribute('data-id'),10),'toggle'); });
-  })(cbs[k]); }
 
   var names=tbody.querySelectorAll('.longpress-target');
   for(var n=0;n<names.length;n++){ (function(el){
