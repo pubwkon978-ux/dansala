@@ -177,6 +177,16 @@ tr.paid-row .amt{color:#2E7D32}
 .exp-total-row{display:flex;align-items:center;justify-content:space-between;margin-top:.7rem;padding:.75rem .9rem;background:var(--gold-bg);border:1.5px solid var(--border);border-radius:10px;font-weight:700;color:var(--maroon);font-size:.9rem}
 .exp-total-row b{font-family:monospace;font-size:1rem}
 @media(max-width:420px){.exp-form{grid-template-columns:1fr 1fr}.btn-exp-add{grid-column:1/-1}}
+/* fit the contributor list to the screen */
+.lp-hint{font-size:.68rem;color:var(--text-muted);margin:-.2rem 0 .6rem;line-height:1.4}
+.entries-table{table-layout:fixed;width:100%}
+.entries-table th,.entries-table td{padding:.65rem .4rem}
+.entries-table th:nth-child(2),.entries-table td:nth-child(2){width:36%}
+.entries-table th:nth-child(3),.entries-table td:nth-child(3){width:15%}
+.entries-table th{white-space:normal;font-size:.66rem}
+.entries-table td.name-cell{word-break:break-word;overflow-wrap:anywhere}
+.entries-table td.amt{white-space:nowrap;font-size:.82rem}
+@media(max-width:380px){.entries-table td.amt{font-size:.76rem}.card-body{padding:.8rem .65rem}}
 </style>
 </head>
 <body>
@@ -277,9 +287,10 @@ tr.paid-row .amt{color:#2E7D32}
       </div>
       <div class="card-body">
         <input type="text" class="search-inp" id="search-inp" placeholder="නම සොයන්න..." autocomplete="off" autocorrect="off" spellcheck="false">
+        <div class="lp-hint">නම මත ඇඟිල්ලෙන් තද කර අල්ලාගෙන සිටින්න (long press) = සංස්කරණය / ඉවත් කිරීම</div>
         <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>නම <span style="font-size:.65rem;color:var(--text-muted);font-weight:400">(long press = edit/delete)</span></th><th class="c">මුදල</th><th class="c">ලැබී ✓</th></tr></thead>
+          <table class="entries-table">
+            <thead><tr><th>නම</th><th class="c">මුදල</th><th class="c">ලැබී ✓</th></tr></thead>
             <tbody id="entries-tbody"><tr><td colspan="3"><div class="empty-entries">🪷 දායකයන් නොමැත</div></td></tr></tbody>
           </table>
         </div>
